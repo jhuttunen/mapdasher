@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
 import haversine from 'haversine';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { 
+  MapContainer, 
+  Marker,
+  Polyline, 
+  Popup,
+  TileLayer, 
+  Tooltip,
+  useMapEvents 
+} from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
@@ -181,6 +189,25 @@ const GuessLocation = () => {
             guessMarker={guessMarker}
             setGuessMarker={setGuessMarker}
           />
+          {rounds[0] && !guessMarker && ( // Show results on map when guessMarker not active
+            rounds.map((round, index) => (
+              <React.Fragment key={index}>
+                <Marker position={[round.question.lat, round.question.lon]}>
+                  <Popup>
+                    Location {round.number}<br />
+                    {round.question.city}, {round.question.country}
+                  </Popup>
+                </Marker>
+                <Marker position={[round.answer.lat, round.answer.lon]}>
+                  <Tooltip permanent>
+                    Guess {round.number}<br />
+                    <b>{round.distance} km</b> away
+                  </Tooltip>
+                </Marker>
+                <Polyline positions={[[round.question.lat, round.question.lon], [round.answer.lat, round.answer.lon]]} />
+              </React.Fragment>
+            ))
+          )}
         </MapContainer>
       </div>
     </div>
