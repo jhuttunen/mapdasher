@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import haversine from 'haversine';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -17,20 +18,26 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const GuessLocation = () => {
   const [currentRound, setCurrentRound] = useState(0);
   const [locations, setLocations] = useState([]);
-  const [guesses, setGuesses] = useState([]);
+  const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
 
   // Handle starting new game
   const startNewGame = () => {
-    fetchAndSetLocation();
     setCurrentRound(1);
+    fetchAndSetLocation();
     setGuessMarker(null);
-    setGuesses([]);
+    setRounds([]);
   };
 
   // Handle submitting guess
   const submitGuess = () => {
-    setGuesses((prevState) => [...prevState, guessMarker]); 
+    const round = {};
+    round.question = locations[currentRound-1];
+    round.answer = guessMarker;
+    round.number = currentRound;
+    const distance = calculateDistance(round.answer, {'lat': locations[currentRound-1].lat, 'lon': locations[currentRound-1].lon});
+    round.distance = distance.toFixed(0);
+    setRounds((prevState) => [...prevState, round]);
     setCurrentRound(prevState => prevState+1);
     setGuessMarker(null);
     fetchAndSetLocation(); // New round starts automatically atm
@@ -41,7 +48,14 @@ const GuessLocation = () => {
     let response = await (
       await fetch('http://localhost:4000/api/locations/1')
     ).json();
-    setLocations([...locations, response[0]]);
+    let location = response[0];
+    location.round = currentRound;
+    setLocations([...locations, location]);
+  };
+
+  // Calculate distance between answer and target location with haversine
+  const calculateDistance = (loc1, loc2) => {
+    return haversine(loc1, loc2, {format:'{lon,lat}'}); 
   };
 
   // Place and update guess marker location
@@ -63,7 +77,7 @@ const GuessLocation = () => {
     const {currentRound, locations} = props;
     return (
       <>
-        <h2>Round: {currentRound}</h2>
+        <h2>Question {currentRound}</h2>
         {locations[currentRound-1] && (
           <p>
             Where on a map is <b>{locations[props.currentRound-1].city}</b>?
@@ -75,30 +89,35 @@ const GuessLocation = () => {
 
   // Single guess
   const Guess = (props) => {
-    const {index, guess} = props;
+    const {coordinates, city, country, distance, number} = props;
     return(
-      <li key={index}>
-        {index+1}: ({guess.lat.toFixed(2)}, {guess.lon.toFixed(2)})
+      <li key={coordinates}>
+        {number}: ({coordinates[0]}, {coordinates[1]}) was <b>{distance}</b> km from <b>{city}</b>, {country}
       </li>
     );
   };
 
   // List of made guesses
   const GuessList = (props) => {
-    const {guesses} = props;
+    const {rounds} = props;
     return(
       <>
-        <h2>Previous guesses</h2>
-        {guesses[0] && (
-          <ul>
-            {guesses.map((guess, index) => (
-              <Guess 
-                key={index}
-                index={index} 
-                guess={guess}
-              />
-            ))}
-          </ul>
+        {rounds[0] && (
+          <div>
+            <h2>Previous guesses</h2>
+            <ul> {/* Slice a copy to prevent mutations and reverse the array */ }
+              {rounds.slice().reverse().map((round, index) => (
+                <Guess 
+                  key={index}
+                  number={round.number}
+                  coordinates={[round.answer.lat.toFixed(2), round.answer.lon.toFixed(2)]}
+                  city={round.question.city}
+                  country={round.question.country}
+                  distance={round.distance}
+                />
+              ))}
+            </ul>
+          </div>
         )}
       </>
     );
@@ -132,16 +151,16 @@ const GuessLocation = () => {
               locations={locations}
             />
             <GuessList 
-              guesses={guesses} 
+              rounds={rounds} 
             />
             {/*{locations[0] && ( // List of locations for debugging purposes
               <ul>
-                  <h2>Locations</h2>
+                <h2>Locations</h2>
                 {locations.map((loc, index) => (
-                    <li key={index}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
+                  <li key={index}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
                 ))}
               </ul>
-            )}*/}
+              )}*/}
           </>
         )}
       </div>
