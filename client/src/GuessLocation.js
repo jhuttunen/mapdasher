@@ -40,14 +40,15 @@ const GuessLocation = () => {
 
   // Handle submitting guess
   const submitGuess = () => {
-    const round = {};
-    round.question = locations[game.currentRound-1];
-    round.answer = guessMarker;
-    round.number = game.currentRound;
-    const distance = calculateDistance(round.answer, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
-    round.distance = distance.toFixed(0);
+    const distance = calculateDistance(guessMarker, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
     const score = calculateRoundScore(distance);
-    round.score = score;
+    const round = {
+      number: game.currentRound,
+      question: locations[game.currentRound-1],
+      answer: guessMarker,
+      distance: distance,
+      score: score
+    };
     setRounds((prevState) => [...prevState, round]);
     setGame((prevState) => ({
       ...prevState,
@@ -70,7 +71,7 @@ const GuessLocation = () => {
 
   // Calculate distance between answer and target location with haversine
   const calculateDistance = (loc1, loc2) => {
-    return haversine(loc1, loc2, {format:'{lon,lat}'}); 
+    return haversine(loc1, loc2, {format:'{lon,lat}'}).toFixed(0); 
   };
 
   // Calculate round score based on distance
@@ -145,6 +146,34 @@ const GuessLocation = () => {
     );
   };
 
+  const GuessesOnMap = (props) => {
+    const {rounds, guessMarker} = props;
+    return(
+      <>
+        {rounds[0] && !guessMarker && ( // Show results on map when guessMarker not active
+          rounds.map((round, index) => (
+            <React.Fragment key={index}>
+              <Marker position={[round.question.lat, round.question.lon]}>
+                <Popup>
+                  Location {round.number}<br />
+                  {round.question.city}, {round.question.country}
+                </Popup>
+              </Marker>
+              <Marker position={[round.answer.lat, round.answer.lon]}>
+                <Tooltip permanent>
+                  Guess {round.number}<br />
+                  Distance {round.distance} km<br />
+                  Score {round.score}
+                </Tooltip>
+              </Marker>
+              <Polyline positions={[[round.question.lat, round.question.lon], [round.answer.lat, round.answer.lon]]} />
+            </React.Fragment>
+          ))
+        )};
+      </>
+    );
+  };
+
   // Buttons to start game and submit guess
   const GameControls = (props) => {
     const {currentRound, submitGuess, startNewGame} = props;
@@ -204,26 +233,10 @@ const GuessLocation = () => {
             guessMarker={guessMarker}
             setGuessMarker={setGuessMarker}
           />
-          {rounds[0] && !guessMarker && ( // Show results on map when guessMarker not active
-            rounds.map((round, index) => (
-              <React.Fragment key={index}>
-                <Marker position={[round.question.lat, round.question.lon]}>
-                  <Popup>
-                    Location {round.number}<br />
-                    {round.question.city}, {round.question.country}
-                  </Popup>
-                </Marker>
-                <Marker position={[round.answer.lat, round.answer.lon]}>
-                  <Tooltip permanent>
-                    Guess {round.number}<br />
-                    Distance {round.distance} km<br />
-                    Score {round.score}
-                  </Tooltip>
-                </Marker>
-                <Polyline positions={[[round.question.lat, round.question.lon], [round.answer.lat, round.answer.lon]]} />
-              </React.Fragment>
-            ))
-          )}
+          <GuessesOnMap
+            rounds={rounds}
+            guessMarker={guessMarker}
+          />
         </MapContainer>
       </div>
     </div>
