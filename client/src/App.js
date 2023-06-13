@@ -1,10 +1,10 @@
 import './App.css';
+import React from 'react';
+import GuessLocation from './GuessLocation';
 
 function App() {
   return (
-    <div className="App">
-
-    </div>
+    <GuessLocation />
   );
 }
 
