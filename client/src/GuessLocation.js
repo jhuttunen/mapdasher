@@ -31,10 +31,11 @@ const GuessLocation = () => {
 
   // Handle starting new game
   const startNewGame = () => {
-    setCurrentRound(1);
-    fetchAndSetLocation();
+    setLocations([]);
     setGuessMarker(null);
     setRounds([]);
+    setCurrentRound(1);
+    fetchAndSetLocation('newGame');
   };
 
   // Handle submitting guess
@@ -52,13 +53,14 @@ const GuessLocation = () => {
   };
 
   // Fetch random location from API
-  const fetchAndSetLocation = async () => {
+  const fetchAndSetLocation = async (newGame) => {
     let response = await (
       await fetch('http://localhost:4000/api/locations/1')
     ).json();
     let location = response[0];
     location.round = currentRound;
-    setLocations([...locations, location]);
+    // Overwrite previous locations if new game
+    (newGame) ? setLocations([location]) : setLocations([...locations, location]);
   };
 
   // Calculate distance between answer and target location with haversine
@@ -114,9 +116,9 @@ const GuessLocation = () => {
           <div>
             <h2>Previous guesses</h2>
             <ul> {/* Slice a copy to prevent mutations and reverse the array */ }
-              {rounds.slice().reverse().map((round, index) => (
+              {rounds.slice().reverse().map((round) => (
                 <Guess 
-                  key={index}
+                  key={round.answer.lat}
                   number={round.number}
                   coordinates={[round.answer.lat.toFixed(2), round.answer.lon.toFixed(2)]}
                   city={round.question.city}
@@ -136,10 +138,10 @@ const GuessLocation = () => {
     const {currentRound, submitGuess, startNewGame} = props;
     return(
       <div style={{paddingTop:'20px'}}>
-        {currentRound > 0
-          ? <button onClick={submitGuess}>Submit guess</button>
-          : <button onClick={startNewGame}>Start new game</button>
+        {currentRound > 0 &&
+          <button onClick={submitGuess}>Submit guess</button>
         }
+        <button onClick={startNewGame}>{currentRound < 1 ? 'Start new': 'Restart'} game</button>
       </div>
     );
   };
@@ -161,14 +163,14 @@ const GuessLocation = () => {
             <GuessList 
               rounds={rounds} 
             />
-            {/*{locations[0] && ( // List of locations for debugging purposes
+            {locations[0] && ( // List of locations for debugging purposes
               <ul>
                 <h2>Locations</h2>
                 {locations.map((loc, index) => (
-                  <li key={index}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
+                  <li key={loc.lat}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
                 ))}
               </ul>
-              )}*/}
+            )}
           </>
         )}
       </div>
