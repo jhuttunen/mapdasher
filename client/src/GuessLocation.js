@@ -76,7 +76,7 @@ const GuessLocation = () => {
 
   // Calculate round score based on distance
   const calculateRoundScore = (distance) => {
-    const score = (5000-distance).toFixed(0);
+    const score = (5000-distance);
     return  (score > 0) ? score : 0;
   };
 
@@ -111,11 +111,14 @@ const GuessLocation = () => {
 
   // Single guess
   const Guess = (props) => {
-    const {coordinates, city, country, distance, number, score} = props;
+    const {city, distance, number, score} = props;
     return(
-      <li key={coordinates}>
-        {number}: <b>{score}</b> points, ({coordinates[0]}, {coordinates[1]}) was <b>{distance}</b> km from <b>{city}</b>, {country}
-      </li>
+      <tr>
+        <td>{number}.</td>
+        <td>{score}</td>
+        <td>{distance}km</td>
+        <td>{city}</td>
+      </tr>
     );
   };
 
@@ -127,19 +130,23 @@ const GuessLocation = () => {
         {rounds[0] && (
           <div>
             <h2>Previous guesses</h2>
-            <ul> {/* Slice a copy to prevent mutations and reverse the array */ }
+            <table> {/* Slice a copy to prevent mutations and reverse the array */ }
+              <thead>
+                <th>Rnd</th>
+                <th>Score</th>
+                <th>Distance</th>
+                <th>Target location</th>
+              </thead>
               {rounds.slice().reverse().map((round) => (
                 <Guess 
                   key={round.answer.lat}
                   number={round.number}
-                  coordinates={[round.answer.lat.toFixed(2), round.answer.lon.toFixed(2)]}
                   city={round.question.city}
-                  country={round.question.country}
                   distance={round.distance}
                   score={round.score}
                 />
               ))}
-            </ul>
+            </table>
           </div>
         )}
       </>
@@ -178,7 +185,7 @@ const GuessLocation = () => {
   const GameControls = (props) => {
     const {currentRound, submitGuess, startNewGame} = props;
     return(
-      <div style={{paddingTop:'20px'}}>
+      <div>
         {currentRound > 0 &&
           <button onClick={submitGuess}>Submit guess</button>
         }
@@ -187,9 +194,20 @@ const GuessLocation = () => {
     );
   };
 
+  // Display game total score
+  const ScoreBoard = (props) => {
+    const {totalScore} = props;
+    return(
+      <>
+        <h2>Total score {totalScore}</h2>
+      </>
+    );
+  };
+
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ flex: '0 0 400px', padding: '0 20px' }}>
+        <ScoreBoard totalScore={game.totalScore} />
         <GameControls 
           currentRound={game.currentRound}
           submitGuess={submitGuess}
@@ -205,14 +223,14 @@ const GuessLocation = () => {
               rounds={rounds}
               game={game} 
             />
-            {locations[0] && ( // List of locations for debugging purposes
+            {/*{locations[0] && ( // List of locations for debugging purposes
               <ul>
                 <h2>Locations</h2>
                 {locations.map((loc, index) => (
                   <li key={loc.lat}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
                 ))}
               </ul>
-            )}
+            )}*/}
           </>
         )}
       </div>
