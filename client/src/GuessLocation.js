@@ -39,6 +39,17 @@ const GuessLocation = () => {
     fetchAndSetLocation('newGame');
   };
 
+  // Get new question
+  const getNextQuestion = () => {
+    setGame((prevState) => ({
+      ...prevState,
+      currentRound: prevState.currentRound + 1, currentRoundAnswered: false
+    }));
+    fetchAndSetLocation();
+    resetMapZoom();
+    setGuessMarker(null);
+  };
+
   // Handle submitting guess
   const submitGuess = () => {
     const distance = calculateDistance(guessMarker, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
@@ -54,10 +65,9 @@ const GuessLocation = () => {
     setRounds((prevState) => [...prevState, round]);
     setGame((prevState) => ({
       ...prevState,
-      currentRound: prevState.currentRound + 1, totalScore: prevState.totalScore+score
+      totalScore: prevState.totalScore+score, currentRoundAnswered: true
     }));
     setGuessMarker(null);
-    fetchAndSetLocation(); // New round starts automatically atm
   };
 
   // Fetch random location from API
@@ -80,6 +90,13 @@ const GuessLocation = () => {
   const calculateRoundScore = (distance) => {
     const score = (5000-distance);
     return  (score > 0) ? score : 0;
+  };
+
+  // Reset map zoom to world
+  const resetMapZoom = () => {
+    if(mapRef.current){
+      mapRef.current.fitWorld();
+    }
   };
 
   // Zoom to submitted guess and fit map bounds accordingly
@@ -111,14 +128,14 @@ const GuessLocation = () => {
   const Question = (props) => {
     const {currentRound, locations} = props;
     return (
-      <>
-        <h2>Question {currentRound}</h2>
+      <div>
+        <h2>Question</h2>
         {locations[currentRound-1] && (
           <p>
             Where on a map is <b>{locations[props.currentRound-1].city}</b>?
           </p>
         )}
-      </>
+      </div>
     );
   };
 
@@ -171,12 +188,12 @@ const GuessLocation = () => {
   };
 
   const GuessesOnMap = (props) => {
-    const {rounds, guessMarker} = props;
+    const {rounds} = props;
     // Last guess only
     const lastRound = rounds.slice(-1);
     return(
       <>
-        {rounds[0] && !guessMarker && ( // Show results on map when guessMarker not active
+        {rounds[0] && ( 
           lastRound.map((round, index) => (
             <React.Fragment key={index}>
               <Marker position={[round.question.lat, round.question.lon]}>
@@ -202,23 +219,23 @@ const GuessLocation = () => {
 
   // Buttons to start game and submit guess
   const GameControls = (props) => {
-    const {currentRound, submitGuess, startNewGame} = props;
+    const {game, submitGuess, startNewGame, getNextQuestion} = props;
     return(
       <div>
-        {currentRound > 0 &&
-          <button onClick={submitGuess}>Submit guess</button>
-        }
-        <button onClick={startNewGame}>{currentRound < 1 ? 'Start new': 'Restart'} game</button>
+        {game.currentRound > 0 && (
+          !game.currentRoundAnswered ? <button onClick={submitGuess}>Submit guess</button> : <button onClick={getNextQuestion}>Next question</button>
+        )}
+        <button onClick={startNewGame}>{game.currentRound < 1 ? 'Start new': 'Restart'} game</button>
       </div>
     );
   };
 
   // Display game total score
   const ScoreBoard = (props) => {
-    const {totalScore} = props;
+    const {totalScore, currentRound} = props;
     return(
       <>
-        <h2>Total score {totalScore}</h2>
+        <h2>Round {currentRound}<br />Total score {totalScore}</h2>
       </>
     );
   };
@@ -226,21 +243,26 @@ const GuessLocation = () => {
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ flex: '0 0 400px', padding: '0 20px' }}>
-        <ScoreBoard totalScore={game.totalScore} />
+        {game.currentRound > 0 ?
+          <ScoreBoard 
+            totalScore={game.totalScore} 
+            currentRound={game.currentRound}
+          /> : null }
         <GameControls 
-          currentRound={game.currentRound}
+          game={game}
           submitGuess={submitGuess}
           startNewGame={startNewGame}
+          getNextQuestion={getNextQuestion}
         />
         {game.currentRound > 0 && (
           <>
-            <Question 
-              currentRound={game.currentRound}
-              locations={locations}
-            />
+            {!game.currentRoundAnswered ? 
+              <Question 
+                currentRound={game.currentRound}
+                locations={locations}
+              /> : null }
             <GuessList 
               rounds={rounds}
-              game={game} 
             />
             {/*{locations[0] && ( // List of locations for debugging purposes
               <div>
@@ -279,10 +301,10 @@ const GuessLocation = () => {
             guessMarker={guessMarker}
             setGuessMarker={setGuessMarker}
           />
-          <GuessesOnMap
-            rounds={rounds}
-            guessMarker={guessMarker}
-          />
+          {game.currentRoundAnswered 
+            ? <GuessesOnMap rounds={rounds} />
+            : null
+          }
         </MapContainer>
       </div>
     </div>
