@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import haversine from 'haversine';
 import { 
   MapContainer, 
@@ -24,6 +24,7 @@ let DefaultIcon = L.icon({
 L.Marker.prototype.options.icon = DefaultIcon;
 
 const GuessLocation = () => {
+  const mapRef = useRef(null);
   const [game, setGame] = useState({currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
@@ -49,6 +50,7 @@ const GuessLocation = () => {
       distance: distance,
       score: score
     };
+    zoomToGuess(round); // Zoom to guess location and fit map bounds
     setRounds((prevState) => [...prevState, round]);
     setGame((prevState) => ({
       ...prevState,
@@ -78,6 +80,16 @@ const GuessLocation = () => {
   const calculateRoundScore = (distance) => {
     const score = (5000-distance);
     return  (score > 0) ? score : 0;
+  };
+
+  // Zoom to submitted guess and fit map bounds accordingly
+  const zoomToGuess = (lastRound) => {
+    if(lastRound.answer && lastRound.question){
+      const bounds = [[lastRound.answer.lat, lastRound.answer.lon], [lastRound.question.lat, lastRound.question.lon]];
+      if(mapRef.current){
+        mapRef.current.fitBounds(bounds, {padding: [300, 300]});
+      }
+    }
   };
 
   // Place and update guess marker location
@@ -131,22 +143,26 @@ const GuessLocation = () => {
         {rounds[0] && (
           <div>
             <h2>Previous guesses</h2>
-            <table> {/* Slice a copy to prevent mutations and reverse the array */ }
+            <table>
               <thead>
-                <th>Rnd</th>
-                <th>Score</th>
-                <th>Distance</th>
-                <th>Target location</th>
+                <tr>
+                  <td>Rnd</td>
+                  <td>Score</td>
+                  <td>Distance</td>
+                  <td>Target location</td>
+                </tr>
               </thead>
-              {rounds.slice().reverse().map((round) => (
-                <Guess 
-                  key={round.answer.lat}
-                  number={round.number}
-                  city={round.question.city}
-                  distance={round.distance}
-                  score={round.score}
-                />
-              ))}
+              <tbody>
+                {rounds.slice().reverse().map((round) => (
+                  <Guess 
+                    key={round.answer.lat}
+                    number={round.number}
+                    city={round.question.city}
+                    distance={round.distance}
+                    score={round.score}
+                  />
+                ))}
+              </tbody>
             </table>
           </div>
         )}
@@ -156,10 +172,12 @@ const GuessLocation = () => {
 
   const GuessesOnMap = (props) => {
     const {rounds, guessMarker} = props;
+    // Last guess only
+    const lastRound = rounds.slice(-1);
     return(
       <>
         {rounds[0] && !guessMarker && ( // Show results on map when guessMarker not active
-          rounds.map((round, index) => (
+          lastRound.map((round, index) => (
             <React.Fragment key={index}>
               <Marker position={[round.question.lat, round.question.lon]}>
                 <Popup>
@@ -244,6 +262,7 @@ const GuessLocation = () => {
       </div>
       <div style={{ flex: '1' }}>
         <MapContainer 
+          ref={mapRef}
           center={[0,0]} 
           zoom={2} 
           scrollWheelZoom={true} 
