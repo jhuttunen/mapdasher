@@ -86,7 +86,8 @@ const GuessLocation = () => {
     useMapEvents({
       click(e) {
         if (currentRound > 0) {
-          const marker = { lat: e.latlng.lat, lon: e.latlng.lng };
+          // wrap() restricts longitude to between 180 and -180
+          const marker = { lat: e.latlng.lat, lon: e.latlng.wrap().lng };
           setGuessMarker(marker);
         }
       },
@@ -224,12 +225,19 @@ const GuessLocation = () => {
               game={game} 
             />
             {/*{locations[0] && ( // List of locations for debugging purposes
-              <ul>
+              <div>
                 <h2>Locations</h2>
-                {locations.map((loc, index) => (
-                  <li key={loc.lat}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
-                ))}
-              </ul>
+                <ul>
+                  {locations.map((loc, index) => (
+                    <li key={loc.lat}>Location {index+1} ({loc.lat.toFixed(2)}, {loc.lon.toFixed(2)})</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+            {guessMarker && ( // GuessMarker location for debugging purposes
+              <div>
+                GuessMarker location: ({guessMarker.lat.toFixed(2)}, {guessMarker.lon.toFixed(2)})
+              </div>
             )}*/}
           </>
         )}
@@ -240,6 +248,7 @@ const GuessLocation = () => {
           zoom={2} 
           scrollWheelZoom={true} 
           zoomSnap={0.1}
+          worldCopyJump={true}
           style={{ width: '100%', height: '100vh' }}
         >
           {/*<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />*/}
