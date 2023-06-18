@@ -4,7 +4,6 @@ import {
   MapContainer, 
   Marker,
   Polyline, 
-  Popup,
   TileLayer, 
   Tooltip,
   useMapEvents 
@@ -129,11 +128,15 @@ const GuessLocation = () => {
     const {currentRound, locations} = props;
     return (
       <div>
-        <h2>Question</h2>
+        <h2>Your quest is</h2>
         {locations[currentRound-1] && (
-          <p>
-            Where on a map is <b>{locations[props.currentRound-1].city}</b>?
-          </p>
+          <span style={{ display:'inline-flex', alignItems: 'center', lineHeight:'24px'}}>
+            <span>... to dash around map to <b>{locations[props.currentRound-1].city}</b></span>
+            <img 
+              src={`https://flagsapi.com/${locations[props.currentRound-1].iso2}/shiny/24.png`} 
+              style={{marginLeft:'5px'}}
+            />
+          </span>
         )}
       </div>
     );
@@ -141,13 +144,14 @@ const GuessLocation = () => {
 
   // Single guess
   const Guess = (props) => {
-    const {city, distance, number, score} = props;
+    const {city, country, iso2, distance, number, score} = props;
     return(
       <tr>
         <td>{number}.</td>
         <td>{score}</td>
         <td>{distance}km</td>
         <td>{city}</td>
+        <td><img src={`https://flagsapi.com/${iso2}/shiny/24.png`} title={country}/></td>
       </tr>
     );
   };
@@ -159,14 +163,14 @@ const GuessLocation = () => {
       <>
         {rounds[0] && (
           <div>
-            <h2>Previous guesses</h2>
+            <h2>Previous rounds</h2>
             <table>
               <thead>
                 <tr>
                   <td>Rnd</td>
                   <td>Score</td>
                   <td>Distance</td>
-                  <td>Target location</td>
+                  <td colSpan={2}>Target location</td>
                 </tr>
               </thead>
               <tbody>
@@ -175,6 +179,8 @@ const GuessLocation = () => {
                     key={round.answer.lat}
                     number={round.number}
                     city={round.question.city}
+                    iso2={round.question.iso2}
+                    country={round.question.country}
                     distance={round.distance}
                     score={round.score}
                   />
@@ -197,16 +203,22 @@ const GuessLocation = () => {
           lastRound.map((round, index) => (
             <React.Fragment key={index}>
               <Marker position={[round.question.lat, round.question.lon]}>
-                <Popup>
-                  Location {round.number}<br />
-                  {round.question.city}, {round.question.country}
-                </Popup>
+                <Tooltip permanent>
+                  <span style={{ display:'inline-flex', alignItems: 'center'}}>
+                    <span>{round.question.city}, {round.question.country}</span>
+                    <img 
+                      src={`https://flagsapi.com/${round.question.iso2}/shiny/24.png`} 
+                      style={{marginLeft:'5px'}}
+                      title={round.question.country}
+                    />
+                  </span>
+                </Tooltip>
               </Marker>
               <Marker position={[round.answer.lat, round.answer.lon]}>
                 <Tooltip permanent>
-                  Guess {round.number}<br />
-                  Distance {round.distance} km<br />
-                  Score {round.score}
+                  Round {round.number}<br />
+                  Score {round.score}<br />
+                  Distance {round.distance} km
                 </Tooltip>
               </Marker>
               <Polyline positions={[[round.question.lat, round.question.lon], [round.answer.lat, round.answer.lon]]} />
@@ -223,7 +235,7 @@ const GuessLocation = () => {
     return(
       <div>
         {game.currentRound > 0 && (
-          !game.currentRoundAnswered ? <button onClick={submitGuess}>Submit guess</button> : <button onClick={getNextQuestion}>Next question</button>
+          !game.currentRoundAnswered ? <button onClick={submitGuess}>Submit guess</button> : <button onClick={getNextQuestion}>Next round</button>
         )}
         <button onClick={startNewGame}>{game.currentRound < 1 ? 'Start new': 'Restart'} game</button>
       </div>
@@ -243,6 +255,7 @@ const GuessLocation = () => {
   return (
     <div style={{ display: 'flex' }}>
       <div style={{ flex: '0 0 400px', padding: '0 20px' }}>
+        <h1>MapDasher</h1>
         {game.currentRound > 0 ?
           <ScoreBoard 
             totalScore={game.totalScore} 
