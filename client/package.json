@@ -1,6 +1,10 @@
 {
-  "name": "client",
+  "name": "mapdasher-client",
   "version": "0.1.0",
+  "description": "A geography game where you dash around map placing guesses",
+  "keywords": ["quiz", "game", "geography", "geo", "location", "guess", "map"],
+  "author": "Jere Huttunen",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
