@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { GameControls, GuessList, Question, ScoreBoard } from './';
 import { GameMap } from '../Map';
+import { Layout } from '../Layout/';
 import LocationPicker from '../Map/LocationPicker';
 import haversine from 'haversine';
 
@@ -91,34 +92,35 @@ const Game = () => {
   };
 
   return (
-    <div style={{ display: 'flex' }}>
-      <div style={{ flex: '0 0 400px', padding: '0 20px' }}>
-        <h1>MapDasher</h1>
-        {game.currentRound > 0 ? (
-          <ScoreBoard 
-            totalScore={game.totalScore} 
-            currentRound={game.currentRound}
+    <Layout
+      sidebar={
+        <>
+          {game.currentRound > 0 ? (
+            <ScoreBoard 
+              totalScore={game.totalScore} 
+              currentRound={game.currentRound}
+            />
+          ) : null }
+          <GameControls 
+            game={game}
+            submitGuess={submitGuess}
+            startNewGame={startNewGame}
+            getNextQuestion={getNextQuestion}
           />
-        ) : null }
-        <GameControls 
-          game={game}
-          submitGuess={submitGuess}
-          startNewGame={startNewGame}
-          getNextQuestion={getNextQuestion}
-        />
-        {game.currentRound > 0 ? (
-          <>
-            {!game.currentRoundAnswered && locations[game.currentRound-1] ? (
-              <Question 
-                city={locations[game.currentRound-1].city}
-                iso2={locations[game.currentRound-1].iso2}
-              /> 
-            ) : null }
-            <GuessList rounds={rounds} />
-          </> 
-        ) : null }
-      </div>
-      <div style={{ flex: '1' }}>
+          {game.currentRound > 0 ? (
+            <>
+              {!game.currentRoundAnswered && locations[game.currentRound-1] ? (
+                <Question 
+                  city={locations[game.currentRound-1].city}
+                  iso2={locations[game.currentRound-1].iso2}
+                /> 
+              ) : null }
+              <GuessList rounds={rounds} />
+            </> 
+          ) : null }
+        </>
+      }
+      content={
         <GameMap 
           rounds={rounds}
           currentRoundAnswered={game.currentRoundAnswered}
@@ -129,9 +131,9 @@ const Game = () => {
               guessMarker={guessMarker}
               setGuessMarker={setGuessMarker}
             />}
-        />
-      </div>
-    </div>
+        />}
+    >
+    </Layout>
   );
 };
 
