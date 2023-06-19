@@ -1,10 +1,10 @@
-import './App.css';
+import './assetts/App.css';
 import React from 'react';
-import GuessLocation from './GuessLocation';
+import { Game } from './components/Game';
 
 function App() {
   return (
-    <GuessLocation />
+    <Game />
   );
 }
 
