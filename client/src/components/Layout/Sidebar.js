@@ -3,7 +3,7 @@ import React from 'react';
 const Sidebar =({children}) =>{
   return(
     <>
-      <div style={{ flex: '0 0 400px', padding: '0 20px' }}>
+      <div className="p-3 md:h-screen md:min-w-max md:w-2/6 lg:w-1/4">
         {children}
       </div>
     </>

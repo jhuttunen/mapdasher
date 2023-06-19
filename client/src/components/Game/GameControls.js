@@ -3,15 +3,15 @@ import React from 'react';
 // Buttons to start game and submit guess
 const GameControls = ({game, submitGuess, startNewGame, getNextQuestion}) => {
   return(
-    <div id="game-controls">
+    <div id="game-controls" className="space-x-2 py-2">
       {game.currentRound > 0 ? (
         !game.currentRoundAnswered 
-          ? <button onClick={submitGuess}>Submit guess</button> 
-          : <button onClick={getNextQuestion}>Next round</button>
+          ? <button className="btn btn-dark btd-dark:hover" onClick={submitGuess}>Submit guess</button> 
+          : <button className="btn btn-dark btd-dark:hover" onClick={getNextQuestion}>Next round</button>
       ) : null }
       {game.currentRound < 1
-        ? <button onClick={startNewGame}>Start new game</button> 
-        : <button onClick={startNewGame}>Restart game</button>
+        ? <button className="btn btn-dark btn-dark:hover" onClick={startNewGame}>Start new game</button> 
+        : <button className="btn btn-light btd-light:hover" onClick={startNewGame}>Restart game</button>
       }
     </div>
   );

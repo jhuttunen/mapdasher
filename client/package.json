@@ -2,7 +2,15 @@
   "name": "mapdasher-client",
   "version": "0.1.0",
   "description": "A geography game where you dash around map placing guesses",
-  "keywords": ["quiz", "game", "geography", "geo", "location", "guess", "map"],
+  "keywords": [
+    "quiz",
+    "game",
+    "geography",
+    "geo",
+    "location",
+    "guess",
+    "map"
+  ],
   "author": "Jere Huttunen",
   "license": "MIT",
   "private": true,
@@ -44,6 +52,7 @@
   },
   "devDependencies": {
     "eslint": "^8.42.0",
-    "eslint-plugin-react": "^7.32.2"
+    "eslint-plugin-react": "^7.32.2",
+    "tailwindcss": "^3.3.2"
   }
 }

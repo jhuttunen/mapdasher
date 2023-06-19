@@ -5,7 +5,7 @@ import Footer from './Footer';
 const Layout =({sidebar, content}) =>{
   return(
     <>
-      <main style={{ display: 'flex' }}>
+      <main className="flex flex-col h-screen md:flex-row">
         <Sidebar>
           <Header title="MapDasher" />
           {sidebar}
