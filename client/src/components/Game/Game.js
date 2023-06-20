@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { useMediaQuery } from 'react-responsive';
 import { GameControls, GuessList, Question, ScoreBoard } from './';
 import { GameMap } from '../Map';
 import { Layout } from '../Layout/';
@@ -7,6 +8,7 @@ import haversine from 'haversine';
 
 const Game = () => {
   const mapRef = useRef(null);
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [game, setGame] = useState({currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
@@ -34,22 +36,24 @@ const Game = () => {
 
   // Handle submitting guess
   const submitGuess = () => {
-    const distance = calculateDistance(guessMarker, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
-    const score = calculateRoundScore(distance);
-    const round = {
-      number: game.currentRound,
-      question: locations[game.currentRound-1],
-      answer: guessMarker,
-      distance: distance,
-      score: score
-    };
-    zoomToGuess(round); // Zoom to guess location and fit map bounds
-    setRounds((prevState) => [...prevState, round]);
-    setGame((prevState) => ({
-      ...prevState,
-      totalScore: prevState.totalScore+score, currentRoundAnswered: true
-    }));
-    setGuessMarker(null);
+    if(guessMarker){
+      const distance = calculateDistance(guessMarker, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
+      const score = calculateRoundScore(distance);
+      const round = {
+        number: game.currentRound,
+        question: locations[game.currentRound-1],
+        answer: guessMarker,
+        distance: distance,
+        score: score
+      };
+      zoomToGuess(round); // Zoom to guess location and fit map bounds
+      setRounds((prevState) => [...prevState, round]);
+      setGame((prevState) => ({
+        ...prevState,
+        totalScore: prevState.totalScore+score, currentRoundAnswered: true
+      }));
+      setGuessMarker(null);
+    }
   };
 
   // Fetch random location from API
@@ -77,16 +81,17 @@ const Game = () => {
   // Reset map zoom to world
   const resetMapZoom = () => {
     if(mapRef.current){
-      mapRef.current.fitWorld();
+      mapRef.current.fitWorld({duration: 0.5});
     }
   };
 
   // Zoom to submitted guess and fit map bounds accordingly
   const zoomToGuess = (lastRound) => {
+    const padding = (isMobile) ? 50 : 200;
     if(lastRound.answer && lastRound.question){
       const bounds = [[lastRound.answer.lat, lastRound.answer.lon], [lastRound.question.lat, lastRound.question.lon]];
       if(mapRef.current){
-        mapRef.current.fitBounds(bounds, {padding: [300, 300]});
+        mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [padding, padding]});
       }
     }
   };
@@ -109,10 +114,11 @@ const Game = () => {
           />
           {game.currentRound > 0 ? (
             <>
-              {!game.currentRoundAnswered && locations[game.currentRound-1] ? (
+              {locations[game.currentRound-1] ? (
                 <Question 
                   city={locations[game.currentRound-1].city}
                   iso2={locations[game.currentRound-1].iso2}
+                  answered={game.currentRoundAnswered}
                 /> 
               ) : null }
               <GuessList rounds={rounds} />

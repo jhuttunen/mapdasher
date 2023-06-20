@@ -1,5 +1,5 @@
 import React from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import GuessesLayer  from './GuessesLayer';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -24,6 +24,7 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
       scrollWheelZoom={true} 
       zoomSnap={0.1}
       worldCopyJump={true}
+      zoomControl={false}
       id="game-map"
       style={{ width: '100%', height: '100vh' }}
     >
@@ -31,6 +32,7 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
       {/*<TileLayer url="https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.png" />*/}
       {/* <TileLayer url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png' />*/}
       <TileLayer url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png" />
+      <ZoomControl position="bottomright" />
       {locationPicker}
       {currentRoundAnswered ? (
         <GuessesLayer rounds={rounds} /> 

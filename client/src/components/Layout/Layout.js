@@ -1,6 +1,5 @@
 import React from 'react';
-import { Content, Sidebar, Header } from './';
-import Footer from './Footer';
+import { Content, Sidebar, Header, Footer } from './';
 
 const Layout =({sidebar, content}) =>{
   return(
