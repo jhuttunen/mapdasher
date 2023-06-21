@@ -1,21 +1,25 @@
 import React from 'react';
 
 // Current round question 
-const Question = ({city, iso2, answered}) => {
+const Question = ({city, iso2, answered, distance}) => {
   return (
-    <div id="question" className="order-2 col-span-3">
-      {!answered ? 
-        <div className="bg-blue-100 bg-opacity-50 p-1 shadow-md text-center text-sm md:order-2 md:p-3 md:mx-3 md:text-base">
-          <span className="text-sm md:text-lg">Your quest is to dash around map to</span><br />
-          <span className="inline-flex align-middle text-center leading-6">
-            <span className="text-lg text-center md:text-xl"><b>{city}</b></span>
+    <div id="question" className="order-2 col-span-4 my-1 md:mx-3 shadow-md">
+      <div className="h-12 text-center text-sm md:order-2 md:h-20 md:p-3 md:text-base">
+        <span className="text-sm md:text-sm lg:text-lg">
+          {!answered 
+            ? 'Dash your way on a map to' 
+            : `You were ${distance} km away from`}
+        </span><br />
+        <span className="inline-flex align-middle text-center">
+          <span className="text-lg text-center lg:text-xl"><b>{city}</b></span>
+          { iso2 ?
             <img 
               src={`https://flagsapi.com/${iso2}/shiny/24.png`} 
-              style={{marginLeft:'5px'}}
+              className="ml-1 self-center"
             />
-          </span>
-        </div>
-        : null }
+            : null }
+        </span>
+      </div>
     </div>
   );
 };

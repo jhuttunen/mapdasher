@@ -87,11 +87,10 @@ const Game = () => {
 
   // Zoom to submitted guess and fit map bounds accordingly
   const zoomToGuess = (lastRound) => {
-    const padding = (isMobile) ? 50 : 200;
     if(lastRound.answer && lastRound.question){
       const bounds = [[lastRound.answer.lat, lastRound.answer.lon], [lastRound.question.lat, lastRound.question.lon]];
       if(mapRef.current){
-        mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [padding, padding]});
+        mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [((isMobile) ? 50 : 200), ((isMobile) ? 100 : 200)]});
       }
     }
   };
@@ -114,13 +113,12 @@ const Game = () => {
           />
           {game.currentRound > 0 ? (
             <>
-              {locations[game.currentRound-1] ? (
-                <Question 
-                  city={locations[game.currentRound-1].city}
-                  iso2={locations[game.currentRound-1].iso2}
-                  answered={game.currentRoundAnswered}
-                /> 
-              ) : null }
+              <Question 
+                city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city : ''}
+                iso2={(locations[game.currentRound-1]) ? locations[game.currentRound-1].iso2 : ''}
+                answered={game.currentRoundAnswered}
+                distance={(game.currentRoundAnswered) ? rounds[game.currentRound-1].distance : 0}
+              /> 
               <GuessList rounds={rounds} />
             </> 
           ) : null }

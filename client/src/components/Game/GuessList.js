@@ -24,7 +24,7 @@ const GuessList = ({rounds}) => {
               <table className="grow bg-slate-50">
                 <thead className="bg-slate-200">
                   <tr className="space-x-2 text-right border border-spacing-1 border-white">
-                    <th>Rnd</th>
+                    <th className="text-center">Rnd</th>
                     <th>Score</th>
                     <th>Distance</th>
                     <th className="text-left pl-5"colSpan={2}>Target location</th>
@@ -33,10 +33,10 @@ const GuessList = ({rounds}) => {
                 <tbody className="bg-slate-100 bg-opacity-0 md:bg-opacity-100">
                   {rounds.slice().reverse().map((round) => (
                     <tr key={round.question.lat} className="space-x-2 text-right border border-spacing-1 border-white">
-                      <td>{round.number}.</td>
+                      <td className="text-center">{round.number}</td>
                       <td>{round.score}</td>
                       <td>{round.distance} km</td>
-                      <td className="text-left pl-5">{round.question.city}</td>
+                      <td className="text-left pl-5 truncate">{round.question.city}</td>
                       <td><img src={`https://flagsapi.com/${round.question.iso2}/shiny/24.png`} title={round.question.country}/></td>
                     </tr>
                   ))}

@@ -16,8 +16,16 @@ code {
     monospace;
 }
 
+/* leaflet overrides */
+.leaflet-tooltip {
+  max-width: 15rem;
+  width: max-content;
+  white-space: normal;
+}
+
+/* tailwindcss */
 .btn {
-  @apply font-bold py-0 px-1 md:py-2 md:px-4 rounded shadow-md;
+  @apply font-bold py-0 px-1 md:py-2 md:px-2 rounded shadow-md;
 }
 .btn-dark {
   @apply bg-gray-500 text-white;
