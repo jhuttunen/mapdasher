@@ -14,6 +14,8 @@ const Game = () => {
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   // Handle starting new game
   const startNewGame = () => {
@@ -58,14 +60,22 @@ const Game = () => {
   };
 
   // Fetch random location from API
-  const fetchAndSetLocation = async (newGame) => {
-    let response = await (
-      await fetch(`${API_URL}/api/locations`)
-    ).json();
-    let location = response[0];
-    location.round = game.currentRound;
-    // Overwrite previous locations if new game
-    (newGame) ? setLocations([location]) : setLocations([...locations, location]);
+  const fetchAndSetLocation = (newGame) => {
+    setIsLoading(true);
+    fetch(`${API_URL}/api/locations`)
+      .then((response) => response.json())
+      .then((response) => {
+        let location = response[0];
+        location.round = game.currentRound;
+        // Overwrite previous locations if new game
+        (newGame) ? setLocations([location]) : setLocations([...locations, location]);
+        setErrorMessage('');
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setErrorMessage('Unable to fetch location data.');
+        setIsLoading(false);
+      });
   };
 
   // Calculate distance between answer and target location with haversine
@@ -119,6 +129,8 @@ const Game = () => {
                 iso2={(locations[game.currentRound-1]) ? locations[game.currentRound-1].iso2 : ''}
                 answered={game.currentRoundAnswered}
                 distance={(game.currentRoundAnswered) ? rounds[game.currentRound-1].distance : 0}
+                isLoading={isLoading}
+                errorMessage={errorMessage}
               /> 
               <GuessList rounds={rounds} />
             </> 
