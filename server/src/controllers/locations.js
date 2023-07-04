@@ -8,6 +8,8 @@ function getRandomLocations(req, res) {
 
 // Generate random locations from data
 function generateRandomLocations(count){
+  // if count is not specified fetch 1, otherwise maximum of 50
+  count = (count > 0) ? ((count <= 50) ? count : 50) : 1;
   let randomLocations = []
   for(i=0; i<count; i++){
     randomLocations.push(locations[Math.floor(Math.random() * locations.length)]);

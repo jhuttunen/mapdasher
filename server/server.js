@@ -1,6 +1,6 @@
 const app = require('./src');
 const http = require('http');
-const port = process.env.PORT || 4000;
+const port = process.env.PORT || 8080;
 const server = http.createServer(app);
 
 server.listen(port, () => {

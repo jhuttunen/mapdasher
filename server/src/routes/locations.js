@@ -5,6 +5,7 @@ const {
   getRandomLocations, 
 } = require('../controllers/locations');
 
+router.get('/', getRandomLocations);
 router.get('/:num', getRandomLocations);
 
 module.exports = router;
