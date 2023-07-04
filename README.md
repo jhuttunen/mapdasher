@@ -1,6 +1,6 @@
 # MapDasher
 
-<font size="10">[>> Play MapDasher](https://jhuttunen.github.io/mapdasher/client/)</font>
+<font size="10">[>> Play MapDasher](https://jhuttunen.github.io/mapdasher/)</font>
 
 ## About the game
 
