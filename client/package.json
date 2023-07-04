@@ -13,6 +13,7 @@
   ],
   "author": "Jere Huttunen",
   "license": "MIT",
+  "homepage": "https://jhuttunen.github.io/mapdasher/client",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
