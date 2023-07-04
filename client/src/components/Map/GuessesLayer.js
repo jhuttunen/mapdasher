@@ -16,9 +16,12 @@ const GuessesLayer = ({rounds}) => {
                     {round.question.city},<br /> {round.question.country}
                   </span>
                   <img 
-                    src={`https://flagsapi.com/${round.question.iso2}/shiny/32.png`} 
+                    src={`https://flagcdn.com/24x18/${round.question.iso2.toLowerCase()}.png`} 
                     className="ml-1 self-center"
+                    width="24"
+                    height="18"
                     title={round.question.country}
+                    alt={round.question.country}
                   />
                 </span>
               </Tooltip>

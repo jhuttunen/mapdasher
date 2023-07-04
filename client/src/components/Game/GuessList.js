@@ -37,7 +37,15 @@ const GuessList = ({rounds}) => {
                       <td>{round.score}</td>
                       <td>{round.distance} km</td>
                       <td className="text-left pl-5 truncate">{round.question.city}</td>
-                      <td><img src={`https://flagsapi.com/${round.question.iso2}/shiny/24.png`} title={round.question.country}/></td>
+                      <td>
+                        <img 
+                          src={`https://flagcdn.com/24x18/${round.question.iso2.toLowerCase()}.png`} 
+                          width="24"
+                          height="18"
+                          title={round.question.country}
+                          alt={round.question.country}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>

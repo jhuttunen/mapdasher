@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { process, useState, useRef } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import { GameControls, GuessList, Question, ScoreBoard } from './';
 import { GameMap } from '../Map';
@@ -7,6 +7,7 @@ import LocationPicker from '../Map/LocationPicker';
 import haversine from 'haversine';
 
 const Game = () => {
+  const API_URL = process.env.REACT_APP_API_URL;
   const mapRef = useRef(null);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [game, setGame] = useState({currentRound:0, totalScore:0});
@@ -59,7 +60,7 @@ const Game = () => {
   // Fetch random location from API
   const fetchAndSetLocation = async (newGame) => {
     let response = await (
-      await fetch('http://localhost:4000/api/locations/1')
+      await fetch(`${API_URL}/api/locations`)
     ).json();
     let location = response[0];
     location.round = game.currentRound;

@@ -14,8 +14,11 @@ const Question = ({city, iso2, answered, distance}) => {
           <span className="text-lg text-center lg:text-xl"><b>{city}</b></span>
           { iso2 ?
             <img 
-              src={`https://flagsapi.com/${iso2}/shiny/24.png`} 
+              src={`https://flagcdn.com/24x18/${iso2.toLowerCase()}.png`} 
               className="ml-1 self-center"
+              width="24"
+              height="18"
+              alt="Flag"
             />
             : null }
         </span>
