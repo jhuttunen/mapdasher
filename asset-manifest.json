@@ -1,10 +1,10 @@
 {
   "files": {
-    "main.css": "/mapdasher/static/css/main.5e226d67.css",
-    "main.js": "/mapdasher/static/js/main.a21863ee.js",
-    "index.html": "/mapdasher/index.html",
-    "main.5e226d67.css.map": "/mapdasher/static/css/main.5e226d67.css.map",
-    "main.a21863ee.js.map": "/mapdasher/static/js/main.a21863ee.js.map"
+    "main.css": "/mapdasher/client/static/css/main.5e226d67.css",
+    "main.js": "/mapdasher/client/static/js/main.a21863ee.js",
+    "index.html": "/mapdasher/client/index.html",
+    "main.5e226d67.css.map": "/mapdasher/client/static/css/main.5e226d67.css.map",
+    "main.a21863ee.js.map": "/mapdasher/client/static/js/main.a21863ee.js.map"
   },
   "entrypoints": [
     "static/css/main.5e226d67.css",
