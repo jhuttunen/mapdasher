@@ -32,7 +32,7 @@ const GuessList = ({rounds}) => {
                 </thead>
                 <tbody className="bg-slate-100 bg-opacity-0 md:bg-opacity-100">
                   {rounds.slice().reverse().map((round) => (
-                    <tr key={round.question.lat} className="space-x-2 text-right border border-spacing-1 border-white">
+                    <tr key={round.number} className="space-x-2 text-right border border-spacing-1 border-white">
                       <td className="text-center">{round.number}</td>
                       <td>{round.score}</td>
                       <td>{round.distance} km</td>
