@@ -20,7 +20,9 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
     <MapContainer 
       ref={mapRef}
       center={[0,0]} 
-      zoom={2} 
+      zoom={2.5} 
+      minZoom={2.5}
+      maxZoom={16}
       scrollWheelZoom={true} 
       zoomSnap={0.1}
       worldCopyJump={true}
@@ -28,10 +30,18 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
       id="game-map"
       style={{ width: '100%', height: '100vh' }}
     >
-      {/*<TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />*/}
-      {/*<TileLayer url="https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}.png" />*/}
-      {/* <TileLayer url='https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png' />*/}
-      <TileLayer url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png" />
+      <TileLayer 
+        url="https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png" 
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      />
+      {/*<TileLayer 
+        url="https://stamen-tiles-{s}.a.ssl.fastly.net/terrain-background/{z}/{x}/{y}{r}.png" 
+        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />*/}
+      {/*<TileLayer 
+        url="https://stamen-tiles-{s}.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg" 
+        attribution='Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      />*/}
       <ZoomControl position="bottomright" />
       {locationPicker}
       {currentRoundAnswered ? (

@@ -24,6 +24,7 @@ const Game = () => {
     setRounds([]);
     setGame({currentRound:1, totalScore:0});
     fetchAndSetLocation('newGame');
+    resetMapZoom();
   };
 
   // Get new question
@@ -101,7 +102,7 @@ const Game = () => {
     if(lastRound.answer && lastRound.question){
       const bounds = [[lastRound.answer.lat, lastRound.answer.lon], [lastRound.question.lat, lastRound.question.lon]];
       if(mapRef.current){
-        mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [((isMobile) ? 50 : 200), ((isMobile) ? 100 : 200)]});
+        mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [((isMobile) ? 50 : 200), ((isMobile) ? 150 : 200)]});
       }
     }
   };
