@@ -10,13 +10,13 @@ const GuessList = ({rounds}) => {
     <>
       {rounds[0] ? (
         <div className="
-          absolute right-0 top-24 max-w-fit flex bg-white rounded border border-gray-200 text-sm
-          md:static md:block md:order-last md:max-w-full md:border-0 md:p-0 md:pt-3 md:text-xs lg:text-sm">
+          absolute right-0 top-24 max-w-fit max-h-[75vh] overflow-y-auto overflow-x-hidden flex bg-white rounded border border-gray-200 text-sm
+          md:static md:block md:order-last md:max-w-full md-max-h-full md:border-0 md:p-0 md:pt-3 md:text-xs lg:text-sm">
           <button
             onClick={toggleVisibility}
-            className="bg-white rounded-l p-3 md:hidden"
+            className="bg-white rounded-l p-3 inline-flex items-top md:hidden"
           >
-            ||| 
+            <span>|||</span>
           </button> 
           <div id="round-history" className={`${isHidden ? 'hidden' : 'block'} md:static md:z-0 md:block p-3`}>
             <h2 className="text-base">Previous rounds</h2>
