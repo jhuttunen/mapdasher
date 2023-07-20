@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+  binaryTargets=["debian-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model City {
+  cityName   String?  @map("city_name") @db.VarChar(120)
+  cityAscii  String?  @map("city_ascii") @db.VarChar(120)
+  lat        Float?
+  lng        Float?
+  country    String?  @db.VarChar(120)
+  iso2       String?  @db.VarChar(2)
+  iso3       String?  @db.VarChar(3)
+  adminName  String?  @map("admin_name") @db.VarChar(120)
+  capital    String?  @db.VarChar(7)
+  population Float?
+  cityId     String   @id @map("city_id") @db.VarChar(10)
+
+  @@map("cities")
+}
+
+model Country {
+  countryCode  String @unique(map: "country_code") @map("country_code") @default("") @db.VarChar(2)
+  countryName  String @default("") @map("country_name") @db.VarChar(50)
+  native       String @default("") @db.VarChar(50)
+  phone        String @default("") @db.VarChar(15)
+  continent    String @default("") @db.VarChar(2)
+  capital      String @default("") @db.VarChar(50)
+  currency     String @default("") @db.VarChar(50)
+  languages    String @default("") @db.VarChar(50)
+
+  @@index([continent], map: "continent")
+  @@map("countries")
+}
+
+model Continent {
+  continentCode String @unique(map: "continent_code") @map("continent_code") @default("") @db.VarChar(2)
+  continentName String @map("continent_name") @default("") @db.VarChar(15)
+
+  @@map("continents")
+}
+
+model Language {
+  languageCode String @unique(map: "language_code") @map("language_code") @default("") @db.VarChar(2)
+  languageName String @map("continent_name") @default("") @db.VarChar(50)
+  native        String @default("") @db.VarChar(50)
+  rtl           Int    @default(0) @db.SmallInt
+
+  @@map("languages")
+}

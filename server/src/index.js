@@ -1,6 +1,11 @@
 const express = require('express');
-const app = express();
+const dotenv = require('dotenv');
+const prisma = require('./db/prisma');
 const cors = require('cors');
+
+dotenv.config();
+
+const app = express();
 
 const locationsRouter = require('./routes/locations');
 
@@ -12,6 +17,6 @@ app.get('/', (req, res) => {
   res.send('Mapdasher-API')
 });
 
-app.use('/api/locations', locationsRouter);
+app.use('/api', locationsRouter);
 
 module.exports = app;
