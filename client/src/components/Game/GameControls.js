@@ -9,9 +9,9 @@ const GameControls = ({game, submitGuess, startNewGame, getNextQuestion}) => {
           ? <button type="button" className="btn btn-dark btd-dark:hover h-full col-span-2 md:h-auto" onClick={submitGuess}>Submit guess</button> 
           : <button type="button" className="btn btn-dark btd-dark:hover h-full col-span-2 md:h-auto" onClick={getNextQuestion}>Next round</button>
       ) : null }
-      {game.currentRound < 1
-        ? <button type="button" className="btn btn-dark btn-dark:hover h-full col-span-3 md:h-auto" onClick={startNewGame}>Start new game</button> 
-        : <button type="button" className="btn btn-light btd-light:hover h-full col-span-1 md:h-auto" onClick={startNewGame}>Restart</button>
+      {game.currentRound > 0
+        ? <button type="button" className="btn btn-light btd-light:hover h-full col-span-1 md:h-auto" onClick={startNewGame}>Restart</button>
+        : null
       }
     </div>
   );

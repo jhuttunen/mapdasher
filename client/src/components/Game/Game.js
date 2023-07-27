@@ -1,6 +1,6 @@
 import React, { process, useState, useRef } from 'react'; 
 import { useMediaQuery } from 'react-responsive';
-import { GameControls, GuessList, Question, ScoreBoard } from './';
+import { GameControls, GuessList, Question, ScoreBoard, StartPage } from './';
 import { GameMap } from '../Map';
 import { Layout } from '../Layout/';
 import LocationPicker from '../Map/LocationPicker';
@@ -10,6 +10,11 @@ const Game = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const mapRef = useRef(null);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
+  const [settings, setSettings] = useState({
+    rounds: 0,
+    locations: 'capitals',
+    map: 'default',
+  });
   const [game, setGame] = useState({currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
@@ -108,23 +113,27 @@ const Game = () => {
   };
 
   return (
-    <Layout
-      sidebar={
-        <>
-          {game.currentRound > 0 ? (
-            <ScoreBoard 
-              totalScore={game.totalScore} 
-              currentRound={game.currentRound}
-            />
-          ) : null }
-          <GameControls 
-            game={game}
-            submitGuess={submitGuess}
-            startNewGame={startNewGame}
-            getNextQuestion={getNextQuestion}
-          />
-          {game.currentRound > 0 ? (
+    <>
+      {game.currentRound <= 0 || !game.currentRound ? (
+        <StartPage
+          startNewGame={startNewGame}
+          settings={settings}
+          setSettings={setSettings}
+        />
+      ) : (
+        <Layout
+          sidebar={
             <>
+              <ScoreBoard 
+                totalScore={game.totalScore} 
+                currentRound={game.currentRound}
+              />
+              <GameControls 
+                game={game}
+                submitGuess={submitGuess}
+                startNewGame={startNewGame}
+                getNextQuestion={getNextQuestion}
+              />
               <Question 
                 city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city : ''}
                 iso2={(locations[game.currentRound-1]) ? locations[game.currentRound-1].iso2 : ''}
@@ -134,24 +143,30 @@ const Game = () => {
                 errorMessage={errorMessage}
               /> 
               <GuessList rounds={rounds} />
-            </> 
-          ) : null }
-        </>
-      }
-      content={
-        <GameMap 
-          rounds={rounds}
-          currentRoundAnswered={game.currentRoundAnswered}
-          mapRef={mapRef}
-          locationPicker={
-            <LocationPicker
-              currentRound={game.currentRound}
-              guessMarker={guessMarker}
-              setGuessMarker={setGuessMarker}
-            />}
-        />}
-    >
-    </Layout>
+            </>
+          }
+          content={
+            <>
+              {game.currentRound > 0 ?
+                <GameMap 
+                  rounds={rounds}
+                  currentRoundAnswered={game.currentRoundAnswered}
+                  mapType={settings.map}
+                  mapRef={mapRef}
+                  locationPicker={
+                    <LocationPicker
+                      currentRound={game.currentRound}
+                      guessMarker={guessMarker}
+                      setGuessMarker={setGuessMarker}
+                    />}
+                />
+                : null }
+            </>
+          }
+        >
+        </Layout>
+      )}
+    </>
   );
 };
 
