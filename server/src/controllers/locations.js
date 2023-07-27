@@ -1,4 +1,5 @@
 const prisma = require('../db/prisma');
+const { Prisma } = require("@prisma/client");
 const { locations } = require('../data/capitals');
 
 // Get all continents
@@ -23,16 +24,32 @@ const getCountries = async (req, res) => {
 
 // Get desired number of random cities from world, continent or country
 const getRandomCities = async (req, res) => {
-  let { num, country, continent } = req.params;
+  let { num, country, continent, cities } = req.params;
   country = (country) ? country.toUpperCase() : '';
   continent = (continent) ? continent.toUpperCase() : '';
+  capital = (cities === 'capitals') ? 'primary' : false;
   num = (num > 0) ? ((num <= 50) ? num : 50) : 1;
   num = parseInt(num);
+  // Create search conditions for the where clauses
+  const searchConditions = [];
+  if (country) {
+    searchConditions.push(Prisma.sql`country=${country}`)
+  }
+  if (continent) {
+    searchConditions.push(Prisma.sql`continent=${continent}`)
+  }
+  if (capital) {
+    searchConditions.push(Prisma.sql`is_capital=${capital}`)
+  }
+  const where = searchConditions.length ? 
+    Prisma.sql`WHERE ${Prisma.join(searchConditions, ' AND ')}` : 
+    Prisma.empty;
+
   try {
     if(country){
       const result = await prisma.$queryRaw`
         SELECT * FROM cities 
-        WHERE iso2=${country}
+        ${where}
         ORDER BY random()
         LIMIT ${num}
       `;
@@ -41,15 +58,15 @@ const getRandomCities = async (req, res) => {
       const result = await prisma.$queryRaw`
         SELECT * FROM cities
         LEFT JOIN countries ON iso2=country_code
-        WHERE continent=${continent}
+        ${where}
         ORDER BY RANDOM()
         LIMIT ${num}
       `;
       res.status(200).json(result);
     }else{
       const result = await prisma.$queryRaw`
-        SELECT * from cities LIMIT ${num}
-        OFFSET floor(random() * (SELECT count(*) FROM cities));
+        SELECT * from cities ${where} LIMIT ${num}
+        OFFSET floor(random() * (SELECT count(*) FROM cities ${where}));
       `;
       res.status(200).json(result);
     }

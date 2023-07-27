@@ -20,10 +20,10 @@ router.get('/countrycodes', getCountryCodes);
 router.get('/countries/:continent', getCountriesContinent);
 router.get('/cities/:country', getCitiesCountry);
 
-router.get('/random/cities/:num', getRandomCities);
-router.get('/random/cities', getRandomCities);
-router.get('/random/cities/:num/country/:country', getRandomCities);
-router.get('/random/cities/:num/continent/:continent', getRandomCities);
+router.get('/random/:cities/:num', getRandomCities);
+router.get('/random/:cities', getRandomCities);
+router.get('/random/:cities/:num/country/:country', getRandomCities);
+router.get('/random/:cities/:num/continent/:continent', getRandomCities);
 
 router.get('/locations', getRandomLocations);
 router.get('/locations/:num', getRandomLocations);

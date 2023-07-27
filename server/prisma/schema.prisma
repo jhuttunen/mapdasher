@@ -17,7 +17,7 @@ model City {
   iso2       String?  @db.VarChar(2)
   iso3       String?  @db.VarChar(3)
   adminName  String?  @map("admin_name") @db.VarChar(120)
-  capital    String?  @db.VarChar(7)
+  isCapital  String?  @db.VarChar(7)  @map("is_capital")
   population Float?
   cityId     String   @id @map("city_id") @db.VarChar(10)
 
