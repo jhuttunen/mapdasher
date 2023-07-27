@@ -1,4 +1,4 @@
-import React, { process, useState, useRef } from 'react';
+import React, { process, useState, useRef } from 'react'; 
 import { useMediaQuery } from 'react-responsive';
 import { GameControls, GuessList, Question, ScoreBoard } from './';
 import { GameMap } from '../Map';
