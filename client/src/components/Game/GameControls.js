@@ -13,7 +13,7 @@ const GameControls = ({game, submitGuess, startNewGame, endGame, getNextQuestion
         ? 
         <>
           <button type="button" className="btn btn-light btd-light:hover h-full col-span-1 md:h-auto" onClick={startNewGame}>Restart</button>
-          <button type="button" className="btn btn-light btd-light:hover h-full col-span-1 md:h-auto" onClick={endGame}>End</button>
+          <button type="button" className="btn btn-light btd-light:hover h-full col-span-1 md:h-auto" onClick={endGame}>Settings</button>
         </>
         : null
       }

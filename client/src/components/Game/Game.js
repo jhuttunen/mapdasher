@@ -15,7 +15,7 @@ const Game = () => {
     locations: 'capitals',
     map: 'default',
   });
-  const [game, setGame] = useState({gameOn: false, currentRound:0, totalScore:0});
+  const [game, setGame] = useState({gameState: false, currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
@@ -27,23 +27,21 @@ const Game = () => {
     setLocations([]);
     setGuessMarker(null);
     setRounds([]);
-    setGame({gameOn: true, currentRound:1, totalScore:0});
+    setGame({gameState: true, currentRound:1, totalScore:0});
     fetchAndSetLocation('newGame', settings.locations);
     resetMapZoom();
   };
 
-  // Handle ending the game
-  const endGame = () => {
-    //setLocations([]);
-    //setGuessMarker(null);
-    //setRounds([]);
+  // Handle toggling game state on and off
+  const toggleGameState = () => {
     setGame((prevState) => ({
       ...prevState,
-      gameOn: false
+      gameState: (prevState.gameState === false ) ? true : false
     }));
-    //fetchAndSetLocation('newGame', settings.locations);
-    //resetMapZoom();
   };
+
+
+  console.log(game.gameState);
 
   // Get new question
   const getNextQuestion = () => {
@@ -142,11 +140,13 @@ const Game = () => {
 
   return (
     <>
-      {game.gameOn === false ? (
+      {game.gameState === false ? (
         <StartPage
           startNewGame={startNewGame}
           settings={settings}
           setSettings={setSettings}
+          resume={game.currentRound > 0 ? true : false}
+          resumeGame={toggleGameState}
         />
       ) : (
         <Layout
@@ -161,7 +161,7 @@ const Game = () => {
                 submitGuess={submitGuess}
                 startNewGame={startNewGame}
                 getNextQuestion={getNextQuestion}
-                endGame={endGame}
+                endGame={toggleGameState}
               />
               <Question 
                 city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city_name : ''}
@@ -176,7 +176,7 @@ const Game = () => {
           }
           content={
             <>
-              {game.gameOn === true ?
+              {game.gameState === true ?
                 <GameMap 
                   rounds={rounds}
                   currentRoundAnswered={game.currentRoundAnswered}

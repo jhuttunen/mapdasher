@@ -2,7 +2,7 @@ import React from 'react';
 import SettingsMenu from './SettingsMenu';
 
 // Buttons to start game and submit guess
-const StartPage = ({startNewGame, settings, setSettings}) => {
+const StartPage = ({startNewGame, settings, setSettings, resume, resumeGame}) => {
   return(
     <div id="start-menu" className="fixed left-0 top-0 h-screen w-screen bg-slate-100 flex items-center justify-center">
       <div className="bg-white w-full h-full px-8 pt-6 pb-8 m-8 md:shadow-md md:rounded md:w-auto md:h-auto">
@@ -15,7 +15,12 @@ const StartPage = ({startNewGame, settings, setSettings}) => {
             settings={settings}
             setSettings={setSettings}
           />
-          <button type="button" className="btn btn-dark btn-dark:hover h-full w-full mt-3" onClick={startNewGame}>Start new game</button> 
+          <div className="grid grid-cols-2 space-x-3">
+            <button type="button" className="btn btn-dark btn-dark:hover h-full w-full mt-3" onClick={startNewGame}>Start new game</button>
+            {resume && 
+            <button type="button" className="btn btn-light btn-light:hover h-full w-full mt-3" onClick={resumeGame}>Resume game</button> 
+            }
+          </div>
         </form>
       </div>
     </div>
