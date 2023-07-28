@@ -15,7 +15,7 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
+const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker, gameOver}) => {
   return(
     <MapContainer 
       ref={mapRef}
@@ -45,7 +45,10 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker}) => {
       <ZoomControl position="bottomright" />
       {locationPicker}
       {currentRoundAnswered ? (
-        <GuessesLayer rounds={rounds} /> 
+        <GuessesLayer 
+          rounds={rounds} 
+          gameOver={gameOver}
+        /> 
       ) : null }
     </MapContainer>
   );

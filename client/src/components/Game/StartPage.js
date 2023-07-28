@@ -18,7 +18,7 @@ const StartPage = ({startNewGame, settings, setSettings, resume, resumeGame}) =>
           <div className="grid grid-cols-2 space-x-3">
             <button type="button" className="btn btn-dark btn-dark:hover h-full w-full mt-3" onClick={startNewGame}>Start new game</button>
             {resume && 
-            <button type="button" className="btn btn-light btn-light:hover h-full w-full mt-3" onClick={resumeGame}>Resume game</button> 
+            <button type="button" className="btn btn-light btn-light:hover h-full w-full mt-3" onClick={resumeGame}>Back to current game</button> 
             }
           </div>
         </form>

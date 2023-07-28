@@ -16,7 +16,7 @@ const Game = () => {
     map: 'default',
     flag: true
   });
-  const [game, setGame] = useState({gameState: false, currentRound:0, totalScore:0});
+  const [game, setGame] = useState({gameState: false, gameOver: false, currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
@@ -28,7 +28,7 @@ const Game = () => {
     setLocations([]);
     setGuessMarker(null);
     setRounds([]);
-    setGame({gameState: true, currentRound:1, totalScore:0});
+    setGame({gameState: true, gameOver: false, currentRound:1, totalScore:0});
     fetchAndSetLocation('newGame', settings.locations);
     resetMapZoom();
   };
@@ -38,6 +38,15 @@ const Game = () => {
     setGame((prevState) => ({
       ...prevState,
       gameState: (prevState.gameState === false ) ? true : false
+    }));
+  };
+
+
+  // Handle gameover
+  const gameOver = () => {
+    setGame((prevState) => ({
+      ...prevState,
+      gameOver: true
     }));
   };
 
@@ -67,13 +76,18 @@ const Game = () => {
         distance: distance,
         score: score
       };
-      zoomToGuess(round); // Zoom to guess location and fit map bounds
       setRounds((prevState) => [...prevState, round]);
       setGame((prevState) => ({
         ...prevState,
         totalScore: prevState.totalScore+score, currentRoundAnswered: true
       }));
       setGuessMarker(null);
+      if(game.currentRound === settings.rounds){
+        gameOver();
+        resetMapZoom();
+      }else{
+        zoomToGuess(round); // Zoom to guess location and fit map bounds
+      }
     }
   };
 
@@ -153,6 +167,7 @@ const Game = () => {
               <ScoreBoard 
                 totalScore={game.totalScore} 
                 currentRound={game.currentRound}
+                rounds={settings.rounds}
               />
               <GameControls 
                 game={game}
@@ -160,6 +175,7 @@ const Game = () => {
                 startNewGame={startNewGame}
                 getNextQuestion={getNextQuestion}
                 endGame={toggleGameState}
+                gameOver={game.gameOver}
               />
               <Question 
                 city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city_name : ''}
@@ -169,6 +185,7 @@ const Game = () => {
                 isLoading={isLoading}
                 errorMessage={errorMessage}
                 showFlag={settings.flag}
+                gameOver={game.gameOver}
               /> 
               <GuessList rounds={rounds} />
             </>
@@ -179,10 +196,11 @@ const Game = () => {
                 <GameMap 
                   rounds={rounds}
                   currentRoundAnswered={game.currentRoundAnswered}
+                  gameOver={game.gameOver}
                   mapRef={mapRef}
                   locationPicker={
                     <LocationPicker
-                      currentRound={game.currentRound}
+                      pickerEnabled={(game.gameOver === false && game.gameState === true) ? true : false}
                       guessMarker={guessMarker}
                       setGuessMarker={setGuessMarker}
                     />}

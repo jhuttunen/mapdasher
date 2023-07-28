@@ -1,6 +1,7 @@
 import React from 'react';
 import SettingsToggle from '../Elements/SettingsToggle/SettingsToggle';
 import SettingsSelect from '../Elements/SettingsSelect/SettingsSelect';
+import SettingsInput from '../Elements/SettingsInput/SettingsInput';
 
 const SettingsMenu = ({settings, setSettings}) => {
   return(
@@ -8,12 +9,12 @@ const SettingsMenu = ({settings, setSettings}) => {
       <h2 className="text-2xl my-3">
         Settings
       </h2>
-      {/*<SettingsInput
+      <SettingsInput
         setSettings={setSettings}
         setting={'rounds'}
         value={settings.rounds}
         text={'Rounds (0 = unlimited)'}
-      />*/}
+      />
       <SettingsSelect
         setSettings={setSettings}
         setting={'locations'}
