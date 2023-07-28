@@ -7,7 +7,7 @@ const LocationPicker = ({currentRound, setGuessMarker, guessMarker}) => {
     click(e) {
       if (currentRound > 0) {
         // wrap() restricts longitude to between 180 and -180
-        const coordinates = { lat: e.latlng.lat, lon: e.latlng.wrap().lng };
+        const coordinates = { lat: e.latlng.lat, lng: e.latlng.wrap().lng };
         setGuessMarker(coordinates);
       }
     },

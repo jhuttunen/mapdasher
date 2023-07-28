@@ -10,7 +10,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage}) => 
         : <>
           <span className="text-sm md:text-sm lg:text-lg">
             {!answered 
-              ? 'Dash your way on a map to' 
+              ? 'Dash your way on the map to' 
               : `You were ${distance} km away from`}
           </span><br />
           <span className="inline-flex align-middle text-center">

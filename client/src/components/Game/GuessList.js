@@ -36,7 +36,7 @@ const GuessList = ({rounds}) => {
                       <td className="text-center">{round.number}</td>
                       <td>{round.score}</td>
                       <td>{round.distance} km</td>
-                      <td className="text-left pl-5 truncate">{round.question.city}</td>
+                      <td className="text-left pl-5 truncate">{round.question.city_name}</td>
                       <td>
                         <img 
                           src={`https://flagcdn.com/24x18/${round.question.iso2.toLowerCase()}.png`} 

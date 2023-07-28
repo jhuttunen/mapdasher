@@ -15,7 +15,7 @@ const Game = () => {
     locations: 'capitals',
     map: 'default',
   });
-  const [game, setGame] = useState({currentRound:0, totalScore:0});
+  const [game, setGame] = useState({gameOn: false, currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
@@ -27,9 +27,22 @@ const Game = () => {
     setLocations([]);
     setGuessMarker(null);
     setRounds([]);
-    setGame({currentRound:1, totalScore:0});
-    fetchAndSetLocation('newGame');
+    setGame({gameOn: true, currentRound:1, totalScore:0});
+    fetchAndSetLocation('newGame', settings.locations);
     resetMapZoom();
+  };
+
+  // Handle ending the game
+  const endGame = () => {
+    //setLocations([]);
+    //setGuessMarker(null);
+    //setRounds([]);
+    setGame((prevState) => ({
+      ...prevState,
+      gameOn: false
+    }));
+    //fetchAndSetLocation('newGame', settings.locations);
+    //resetMapZoom();
   };
 
   // Get new question
@@ -38,7 +51,7 @@ const Game = () => {
       ...prevState,
       currentRound: prevState.currentRound + 1, currentRoundAnswered: false
     }));
-    fetchAndSetLocation();
+    fetchAndSetLocation(null, settings.locations);
     resetMapZoom();
     setGuessMarker(null);
   };
@@ -46,7 +59,10 @@ const Game = () => {
   // Handle submitting guess
   const submitGuess = () => {
     if(guessMarker){
-      const distance = calculateDistance(guessMarker, {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lon});
+      const distance = calculateDistance(
+        {'lat': guessMarker.lat, 'lon': guessMarker.lng}, 
+        {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lng}
+      );
       const score = calculateRoundScore(distance);
       const round = {
         number: game.currentRound,
@@ -66,9 +82,21 @@ const Game = () => {
   };
 
   // Fetch random location from API
-  const fetchAndSetLocation = (newGame) => {
+  const fetchAndSetLocation = (newGame, type) => {
     setIsLoading(true);
-    fetch(`${API_URL}/api/locations`)
+    let url = '';
+    switch(type){
+    case 'capitals':
+      url = `${API_URL}/api/random/capitals`;
+      break;
+    case 'world':
+      url = `${API_URL}/api/random/cities`;
+      break;
+    default:
+      url = `${API_URL}/api/random/cities`;
+      break;
+    }
+    fetch(url)
       .then((response) => response.json())
       .then((response) => {
         let location = response[0];
@@ -105,7 +133,7 @@ const Game = () => {
   // Zoom to submitted guess and fit map bounds accordingly
   const zoomToGuess = (lastRound) => {
     if(lastRound.answer && lastRound.question){
-      const bounds = [[lastRound.answer.lat, lastRound.answer.lon], [lastRound.question.lat, lastRound.question.lon]];
+      const bounds = [[lastRound.answer.lat, lastRound.answer.lng], [lastRound.question.lat, lastRound.question.lng]];
       if(mapRef.current){
         mapRef.current.flyToBounds(bounds, {duration: 0.5, padding: [((isMobile) ? 50 : 200), ((isMobile) ? 150 : 200)]});
       }
@@ -114,7 +142,7 @@ const Game = () => {
 
   return (
     <>
-      {game.currentRound <= 0 || !game.currentRound ? (
+      {game.gameOn === false ? (
         <StartPage
           startNewGame={startNewGame}
           settings={settings}
@@ -133,9 +161,10 @@ const Game = () => {
                 submitGuess={submitGuess}
                 startNewGame={startNewGame}
                 getNextQuestion={getNextQuestion}
+                endGame={endGame}
               />
               <Question 
-                city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city : ''}
+                city={(locations[game.currentRound-1]) ? locations[game.currentRound-1].city_name : ''}
                 iso2={(locations[game.currentRound-1]) ? locations[game.currentRound-1].iso2 : ''}
                 answered={game.currentRoundAnswered}
                 distance={(game.currentRoundAnswered) ? rounds[game.currentRound-1].distance : 0}
@@ -147,11 +176,10 @@ const Game = () => {
           }
           content={
             <>
-              {game.currentRound > 0 ?
+              {game.gameOn === true ?
                 <GameMap 
                   rounds={rounds}
                   currentRoundAnswered={game.currentRoundAnswered}
-                  mapType={settings.map}
                   mapRef={mapRef}
                   locationPicker={
                     <LocationPicker
