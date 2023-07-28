@@ -5,7 +5,7 @@ import SettingsMenu from './SettingsMenu';
 const StartPage = ({startNewGame, settings, setSettings, resume, resumeGame}) => {
   return(
     <div id="start-menu" className="fixed left-0 top-0 h-screen w-screen bg-slate-100 flex items-center justify-center">
-      <div className="bg-white w-full h-full px-8 pt-6 pb-8 m-8 md:shadow-md md:rounded md:w-auto md:h-auto">
+      <div className="bg-white w-full h-full p-8 m-auto md:shadow-md md:rounded md:h-auto md:w-auto">
         <h1 className="text-4xl">
           MapDasher
         </h1>

@@ -14,6 +14,7 @@ const Game = () => {
     rounds: 0,
     locations: 'capitals',
     map: 'default',
+    flag: true
   });
   const [game, setGame] = useState({gameState: false, currentRound:0, totalScore:0});
   const [locations, setLocations] = useState([]);
@@ -39,9 +40,6 @@ const Game = () => {
       gameState: (prevState.gameState === false ) ? true : false
     }));
   };
-
-
-  console.log(game.gameState);
 
   // Get new question
   const getNextQuestion = () => {
@@ -170,6 +168,7 @@ const Game = () => {
                 distance={(game.currentRoundAnswered) ? rounds[game.currentRound-1].distance : 0}
                 isLoading={isLoading}
                 errorMessage={errorMessage}
+                showFlag={settings.flag}
               /> 
               <GuessList rounds={rounds} />
             </>

@@ -2,7 +2,7 @@ import React from 'react';
 import LoadingSpinner from '../Elements/LoadingSpinner/LoadingSpinner';
 
 // Current round question 
-const Question = ({city, iso2, answered, distance, isLoading, errorMessage}) => {
+const Question = ({city, iso2, answered, distance, isLoading, errorMessage, showFlag}) => {
   const renderQuestion = (
     <>
       {errorMessage 
@@ -15,7 +15,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage}) => 
           </span><br />
           <span className="inline-flex align-middle text-center">
             <span className="text-lg text-center lg:text-xl"><b>{city}</b></span>
-            { iso2 ?
+            { iso2 && showFlag ?
               <img 
                 src={`https://flagcdn.com/24x18/${iso2.toLowerCase()}.png`} 
                 className="ml-1 self-center"
@@ -29,7 +29,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage}) => 
     </>
   );
   return(
-    <div id="question" className="order-2 col-span-4 my-1 md:mx-3 shadow-md">
+    <div id="question" className="order-2 col-span-4 my-1 md:mx-3 shadow-md rounded">
       <div className="h-12 text-center text-sm md:order-2 md:h-20 md:p-3 md:text-base">
         { isLoading ? <LoadingSpinner /> : renderQuestion }
       </div>
