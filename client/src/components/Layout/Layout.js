@@ -6,7 +6,10 @@ const Layout =({sidebar, content}) =>{
     <>
       <main className="flex flex-col h-screen md:flex-row">
         <Sidebar>
-          <Header title="MapDasher" />
+          <Header 
+            title="MapDasher" 
+          >
+          </Header>
           {sidebar}
         </Sidebar>
         <Content>

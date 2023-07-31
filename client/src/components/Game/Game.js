@@ -1,4 +1,4 @@
-import React, { process, useState, useRef } from 'react'; 
+import React, { process, useEffect, useState, useRef } from 'react'; 
 import { useMediaQuery } from 'react-responsive';
 import { GameControls, GuessList, Question, ScoreBoard, StartPage } from './';
 import { GameMap } from '../Map';
@@ -9,26 +9,63 @@ import haversine from 'haversine';
 const Game = () => {
   const API_URL = process.env.REACT_APP_API_URL;
   const mapRef = useRef(null);
+  const timerRef = useRef(null);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [settings, setSettings] = useState({
     rounds: 0,
     locations: 'capitals',
     map: 'default',
-    flag: true
+    flag: true,
+    timer: 0
   });
-  const [game, setGame] = useState({gameState: false, gameOver: false, currentRound:0, totalScore:0});
+  const [game, setGame] = useState({
+    gameActive: false, 
+    gameOver: false, 
+    currentRound:0, 
+    totalScore:0
+  });
   const [locations, setLocations] = useState([]);
   const [rounds, setRounds] = useState([]);
   const [guessMarker, setGuessMarker] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [timer, setTimer] = useState({
+    timerActive:false, 
+    timeLeft:0
+  });
+
+  // Update the timer
+  useEffect(() => {
+    if(settings.timer > 0 && game.gameActive && !isLoading){
+      if (timer.timeLeft > 0 && timer.timerActive && !game.gameOver) {
+        timerRef.current = setInterval(() => {
+          setTimer((prevState) => ({
+            ...prevState,
+            timeLeft: prevState.timeLeft -1
+          }));
+        }, 1000);
+      }
+      if(timer.timeLeft === 0 && timer.timerActive){
+        gameOver();
+      }
+    }
+    return () => {
+      clearInterval(timerRef.current);
+    };
+  }, [timer, isLoading, game.gameOver, game.gameActive, settings.timer]);
 
   // Handle starting new game
   const startNewGame = () => {
     setLocations([]);
     setGuessMarker(null);
     setRounds([]);
-    setGame({gameState: true, gameOver: false, currentRound:1, totalScore:0});
+    if(settings.timer){
+      setTimer((prevState) => ({
+        ...prevState,
+        timerActive: true, timeLeft: settings.timer
+      }));
+    }
+    setGame({gameActive: true, gameOver: false, currentRound:1, totalScore:0});
     fetchAndSetLocation('newGame', settings.locations);
     resetMapZoom();
   };
@@ -37,10 +74,13 @@ const Game = () => {
   const toggleGameState = () => {
     setGame((prevState) => ({
       ...prevState,
-      gameState: (prevState.gameState === false ) ? true : false
+      gameActive: (prevState.gameActive === false ) ? true : false
+    }));
+    setTimer((prevState) => ({
+      ...prevState,
+      timerActive: (prevState.timerActive === false ) ? true : false
     }));
   };
-
 
   // Handle gameover
   const gameOver = () => {
@@ -52,6 +92,12 @@ const Game = () => {
 
   // Get new question
   const getNextQuestion = () => {
+    if(settings.timer){
+      setTimer((prevState) => ({
+        ...prevState,
+        timerActive: true, timeLeft: settings.timer
+      }));
+    }
     setGame((prevState) => ({
       ...prevState,
       currentRound: prevState.currentRound + 1, currentRoundAnswered: false
@@ -64,6 +110,12 @@ const Game = () => {
   // Handle submitting guess
   const submitGuess = () => {
     if(guessMarker){
+      if(settings.timer){
+        setTimer((prevState) => ({
+          ...prevState,
+          timerActive: false
+        }));
+      }
       const distance = calculateDistance(
         {'lat': guessMarker.lat, 'lon': guessMarker.lng}, 
         {'lat': locations[game.currentRound-1].lat, 'lon': locations[game.currentRound-1].lng}
@@ -152,22 +204,25 @@ const Game = () => {
 
   return (
     <>
-      {game.gameState === false ? (
-        <StartPage
-          startNewGame={startNewGame}
-          settings={settings}
-          setSettings={setSettings}
-          resume={game.currentRound > 0 ? true : false}
-          resumeGame={toggleGameState}
-        />
-      ) : (
-        <Layout
-          sidebar={
+      <Layout
+        sidebar={
+          !game.gameActive ? 
+            <StartPage
+              startNewGame={startNewGame}
+              settings={settings}
+              setSettings={setSettings}
+              resume={game.currentRound > 0 ? true : false}
+              resumeGame={toggleGameState}
+            />
+            :
             <>
               <ScoreBoard 
                 totalScore={game.totalScore} 
                 currentRound={game.currentRound}
                 rounds={settings.rounds}
+                timeLeft={timer.timeLeft}
+                timer={settings.timer}
+                timerActive={timer.timerActive}
               />
               <GameControls 
                 game={game}
@@ -189,28 +244,26 @@ const Game = () => {
               /> 
               <GuessList rounds={rounds} />
             </>
-          }
-          content={
-            <>
-              {game.gameState === true ?
-                <GameMap 
-                  rounds={rounds}
-                  currentRoundAnswered={game.currentRoundAnswered}
-                  gameOver={game.gameOver}
-                  mapRef={mapRef}
-                  locationPicker={
-                    <LocationPicker
-                      pickerEnabled={(game.gameOver === false && game.gameState === true) ? true : false}
-                      guessMarker={guessMarker}
-                      setGuessMarker={setGuessMarker}
-                    />}
-                />
-                : null }
-            </>
-          }
-        >
-        </Layout>
-      )}
+        }
+        content={
+          <>
+            <GameMap 
+              rounds={rounds}
+              currentRoundAnswered={game.currentRoundAnswered}
+              gameOver={game.gameOver}
+              mapRef={mapRef}
+              locationPicker={
+                <LocationPicker
+                  pickerEnabled={(!game.gameOver && game.gameActive) ? true : false}
+                  guessMarker={guessMarker}
+                  setGuessMarker={setGuessMarker}
+                />}
+            />
+          </>
+        }
+      >
+      </Layout>
+      
     </>
   );
 };

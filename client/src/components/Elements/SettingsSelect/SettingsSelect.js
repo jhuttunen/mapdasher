@@ -11,7 +11,7 @@ const SettingsSelect = ({setSettings, setting, selected, options, text}) => {
 
   return(
     <>
-      <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold my-3" htmlFor="settings-locations">
+      <label className="block uppercase tracking-wide text-gray-700 text-sm font-bold my-3" htmlFor={`settings-${setting}`}>
         {text}
       </label>
       <select 

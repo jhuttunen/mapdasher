@@ -6,7 +6,7 @@ import SettingsInput from '../Elements/SettingsInput/SettingsInput';
 const SettingsMenu = ({settings, setSettings}) => {
   return(
     <div>
-      <h2 className="text-2xl my-3">
+      <h2 className="text-2xl mb-3 my-5">
         Settings
       </h2>
       <SettingsInput
@@ -40,6 +40,12 @@ const SettingsMenu = ({settings, setSettings}) => {
         }
         text={'Map style'}
       />*/}
+      <SettingsInput
+        setSettings={setSettings}
+        setting={'timer'}
+        value={settings.timer}
+        text={'Round timer in seconds (0 = disabled)'}
+      />
       <SettingsToggle
         setSettings={setSettings}
         setting={'flag'}
