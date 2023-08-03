@@ -17,7 +17,7 @@ const GuessesLayer = ({rounds, gameOver}) => {
                 <span className="inline-flex">
                   <span className="text-left truncate max-w-[13rem]">
                     <b>Round {round.number}</b><br />
-                    {round.question.city_name}<br />
+                    {round.question.city_name}, {round.question.country}<br />
                     Score {round.score}<br />
                     Distance {round.distance} km<br />
                   </span>
