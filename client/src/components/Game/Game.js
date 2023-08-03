@@ -12,9 +12,10 @@ const Game = () => {
   const timerRef = useRef(null);
   const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const [settings, setSettings] = useState({
-    rounds: 0,
+    rounds: 5,
     locations: 'capitals',
-    map: 'default',
+    continent : null,
+    map: 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
     flag: true,
     timer: 0
   });
@@ -66,7 +67,7 @@ const Game = () => {
       }));
     }
     setGame({gameActive: true, gameOver: false, currentRound:1, totalScore:0});
-    fetchAndSetLocation('newGame', settings.locations);
+    fetchAndSetLocation('newGame', settings.locations, settings.continent);
     resetMapZoom();
   };
 
@@ -102,7 +103,7 @@ const Game = () => {
       ...prevState,
       currentRound: prevState.currentRound + 1, currentRoundAnswered: false
     }));
-    fetchAndSetLocation(null, settings.locations);
+    fetchAndSetLocation(null, settings.locations, settings.continent);
     resetMapZoom();
     setGuessMarker(null);
   };
@@ -144,7 +145,7 @@ const Game = () => {
   };
 
   // Fetch random location from API
-  const fetchAndSetLocation = (newGame, type) => {
+  const fetchAndSetLocation = (newGame, type, continent) => {
     setIsLoading(true);
     let url = '';
     switch(type){
@@ -153,6 +154,9 @@ const Game = () => {
       break;
     case 'world':
       url = `${API_URL}/api/random/cities`;
+      break;
+    case 'continent':
+      url = `${API_URL}/api/random/cities/1/continent/${continent}`;
       break;
     default:
       url = `${API_URL}/api/random/cities`;
@@ -205,6 +209,7 @@ const Game = () => {
   return (
     <>
       <Layout
+        gameActive={game.gameActive}
         sidebar={
           !game.gameActive ? 
             <StartPage

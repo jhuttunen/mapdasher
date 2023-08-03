@@ -4,6 +4,7 @@ import SettingsSelect from '../Elements/SettingsSelect/SettingsSelect';
 import SettingsInput from '../Elements/SettingsInput/SettingsInput';
 
 const SettingsMenu = ({settings, setSettings}) => {
+  let subSelect = (settings.locations === 'continent' || settings.locations === 'country') ? 'grid-cols-2' : 'grid-cols-1';
   return(
     <div>
       <h2 className="text-2xl mb-3 my-5">
@@ -15,31 +16,44 @@ const SettingsMenu = ({settings, setSettings}) => {
         value={settings.rounds}
         text={'Rounds (0 = unlimited)'}
       />
-      <SettingsSelect
-        setSettings={setSettings}
-        setting={'locations'}
-        selected={settings.locations}
-        options={
-          [
-            {value: 'capitals', text: 'Capital cities'},
-            {value: 'world', text: 'World cities'},
-          ]
+      <div className={`grid ${subSelect} gap-x-1`}>
+        <div>
+          <SettingsSelect
+            setSettings={setSettings}
+            setting={'locations'}
+            selected={settings.locations}
+            options={
+              [
+                {'value': 'capitals', 'text': 'Capitals'},
+                {'value': 'world', 'text': 'World'},
+                {'value': 'continent', 'text': 'Continent'},
+              ]
+            }
+            text={'Locations'}
+            subSettings={true}
+          />
+        </div>
+        {settings.locations === 'continent' &&
+        <div>
+          <SettingsSelect
+            setSettings={setSettings}
+            setting={'continent'}
+            selected={settings.continent}
+            options={
+              [
+                {'value': 'AF', 'text': 'Africa'},
+                {'value': 'AS', 'text': 'Asia'},
+                {'value': 'EU', 'text': 'Europe'},
+                {'value': 'NA', 'text': 'North America'},
+                {'value': 'OC', 'text': 'Oceania'},
+                {'value': 'SA', 'text': 'South America'},
+              ]
+            }
+            text={'Continent'}
+          />
+        </div>
         }
-        text={'Locations'}
-      />
-      {/*<SettingsSelect
-        setSettings={setSettings}
-        setting={'map'}
-        selected={settings.map}
-        options={
-          [
-            {value: 'default', text: 'Default, location names hidden'},
-            {value: 'colourful', text: 'Colourful, location names hidden'},
-            {value: 'names', text: 'Easy mode, location names included'},
-          ]
-        }
-        text={'Map style'}
-      />*/}
+      </div>
       <SettingsInput
         setSettings={setSettings}
         setting={'timer'}
