@@ -16,6 +16,8 @@ code {
     monospace;
 }
 
+h1, .game-over { font-family: 'Press Start 2P', cursive; }
+
 /* leaflet overrides */
 .leaflet-tooltip {
   max-width: 15rem;

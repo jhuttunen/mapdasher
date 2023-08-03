@@ -7,7 +7,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage, show
     <>
       {errorMessage 
         ? <div className="text-red-500 text-lg lg:text-xl">{errorMessage}</div> 
-        : gameOver ? <div className="text-4xl uppercase font-serif font-extrabold md:text-5xl text-gray-300">Game Over</div>
+        : gameOver ? <div className="game-over text-2xl uppercase font-serif font-extrabold text-gray-200 md:text-2xl 2xl:text-3xl">Game Over</div>
           :  
           <>
             <div className="text-sm md:text-sm lg:text-lg">
@@ -32,7 +32,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage, show
     </>
   );
   return(
-    <div id="question" className="flex items-center justify-center order-2 my-1 col-span-4 md:h-24 md:mx-3 shadow-md rounded">
+    <div id="question" className="flex items-center justify-center order-2 p-1 my-1 col-span-4 md:h-24 md:shadow-md md:rounded">
       <div className="text-center text-sm md:order-2 md:h-22 md:p-3 md:text-base">
         { isLoading ? <LoadingSpinner /> : renderQuestion }
       </div>
