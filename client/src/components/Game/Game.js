@@ -14,7 +14,8 @@ const Game = () => {
   const [settings, setSettings] = useState({
     rounds: 5,
     locations: 'capitals',
-    continent : null,
+    continent : 'EU',
+    country: 'FI',
     map: 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png',
     flag: true,
     timer: 0
@@ -67,7 +68,7 @@ const Game = () => {
       }));
     }
     setGame({gameActive: true, gameOver: false, currentRound:1, totalScore:0});
-    fetchAndSetLocation('newGame', settings.locations, settings.continent);
+    fetchAndSetLocation('newGame', settings.locations, settings.continent, settings.country);
     resetMapZoom();
   };
 
@@ -103,7 +104,7 @@ const Game = () => {
       ...prevState,
       currentRound: prevState.currentRound + 1, currentRoundAnswered: false
     }));
-    fetchAndSetLocation(null, settings.locations, settings.continent);
+    fetchAndSetLocation(null, settings.locations, settings.continent, settings.country);
     resetMapZoom();
     setGuessMarker(null);
   };
@@ -145,7 +146,7 @@ const Game = () => {
   };
 
   // Fetch random location from API
-  const fetchAndSetLocation = (newGame, type, continent) => {
+  const fetchAndSetLocation = (newGame, type, continent, country) => {
     setIsLoading(true);
     let url = '';
     switch(type){
@@ -157,6 +158,9 @@ const Game = () => {
       break;
     case 'continent':
       url = `${API_URL}/api/random/cities/1/continent/${continent}`;
+      break;
+    case 'country':
+      url = `${API_URL}/api/random/cities/1/country/${country}`;
       break;
     default:
       url = `${API_URL}/api/random/cities`;

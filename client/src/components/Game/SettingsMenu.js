@@ -2,9 +2,22 @@ import React from 'react';
 import SettingsToggle from '../Elements/SettingsToggle/SettingsToggle';
 import SettingsSelect from '../Elements/SettingsSelect/SettingsSelect';
 import SettingsInput from '../Elements/SettingsInput/SettingsInput';
+import countries from '../../assetts/data/countries.json';
 
 const SettingsMenu = ({settings, setSettings}) => {
   let subSelect = (settings.locations === 'continent' || settings.locations === 'country') ? 'grid-cols-2' : 'grid-cols-1';
+  const continentOptions = [
+    {'value': 'AF', 'text': 'Africa'},
+    {'value': 'AS', 'text': 'Asia'},
+    {'value': 'EU', 'text': 'Europe'},
+    {'value': 'NA', 'text': 'North America'},
+    {'value': 'OC', 'text': 'Oceania'},
+    {'value': 'SA', 'text': 'South America'},
+  ];
+  let countryOptions = [];
+  countries.map((data) => (
+    countryOptions.push({'value': data.countryCode, 'text': `${data.countryName} (${data.citiesCount})` })
+  ));
   return(
     <div>
       <h2 className="text-2xl mb-3 my-5">
@@ -27,6 +40,7 @@ const SettingsMenu = ({settings, setSettings}) => {
                 {'value': 'capitals', 'text': 'Capitals'},
                 {'value': 'world', 'text': 'World'},
                 {'value': 'continent', 'text': 'Continent'},
+                {'value': 'country', 'text': 'Country'},
               ]
             }
             text={'Locations'}
@@ -39,17 +53,19 @@ const SettingsMenu = ({settings, setSettings}) => {
             setSettings={setSettings}
             setting={'continent'}
             selected={settings.continent}
-            options={
-              [
-                {'value': 'AF', 'text': 'Africa'},
-                {'value': 'AS', 'text': 'Asia'},
-                {'value': 'EU', 'text': 'Europe'},
-                {'value': 'NA', 'text': 'North America'},
-                {'value': 'OC', 'text': 'Oceania'},
-                {'value': 'SA', 'text': 'South America'},
-              ]
-            }
+            options={continentOptions}
             text={'Continent'}
+          />
+        </div>
+        }
+        {settings.locations === 'country' &&
+        <div>
+          <SettingsSelect
+            setSettings={setSettings}
+            setting={'country'}
+            selected={settings.country}
+            options={countryOptions}
+            text={'Country'}
           />
         </div>
         }
