@@ -1,4 +1,4 @@
-import './assetts/App.css';
+import './assetts/styles/App.css';
 import React from 'react';
 import ErrorBoundary from './components/ErrorHandling/ErrorBoundary';
 import { Game } from './components/Game';
