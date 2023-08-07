@@ -9,15 +9,15 @@ const GameControls = ({game, submitGuess, startNewGame, endGame, getNextQuestion
       {game.currentRound > 0
         ? 
         <>
-          <button type="button" className="btn btn-light btd-light:hover h-full w-full" onClick={endGame}>Settings</button>
-          <button type="button" className={`btn ${restartBtnColor}h-full w-full`} onClick={startNewGame}>{!gameOver ? 'Restart' : 'Play again'}</button>
+          <button type="button" className="text-xs btn btn-light btd-light:hover h-full w-full md:text-sm" onClick={endGame}>Settings</button>
+          <button type="button" className={`btn ${restartBtnColor}h-full w-full text-xs md:text-sm`} onClick={startNewGame}>{!gameOver ? 'Restart' : 'Play again'}</button>
         </>
         : null
       }
       {game.currentRound > 0 && !gameOver ? (
         !game.currentRoundAnswered 
-          ? <button type="button" className="btn btn-dark btd-dark:hover h-full w-full " onClick={submitGuess}>Submit guess</button> 
-          : <button type="button" className="btn btn-dark btd-dark:hover h-full w-full " onClick={getNextQuestion}>Next round</button>
+          ? <button type="button" className="text-xs btn btn-dark btd-dark:hover h-full w-full md:text-sm" onClick={submitGuess}>Submit guess</button> 
+          : <button type="button" className="text-xs btn btn-dark btd-dark:hover h-full w-full md:text-sm" onClick={getNextQuestion}>Next round</button>
       ) : null }
     </div>
   );

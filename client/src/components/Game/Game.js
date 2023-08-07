@@ -222,6 +222,7 @@ const Game = () => {
               setSettings={setSettings}
               resume={game.currentRound > 0 ? true : false}
               resumeGame={toggleGameState}
+              gameActive={game.gameActive}
             />
             :
             <>
@@ -261,6 +262,7 @@ const Game = () => {
               currentRoundAnswered={game.currentRoundAnswered}
               gameOver={game.gameOver}
               mapRef={mapRef}
+              isMobile={isMobile}
               locationPicker={
                 <LocationPicker
                   pickerEnabled={(!game.gameOver && game.gameActive) ? true : false}

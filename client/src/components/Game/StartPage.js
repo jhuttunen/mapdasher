@@ -3,11 +3,11 @@ import SettingsMenu from './SettingsMenu';
 import MapDasherLogo from '../Elements/MapDasherLogo/MapDasherLogo';
 
 // Buttons to start game and submit guess
-const StartPage = ({startNewGame, settings, setSettings, resume, resumeGame}) => {
+const StartPage = ({startNewGame, settings, setSettings, resume, resumeGame, gameActive}) => {
   return(
     <div id="start-menu" className="h-screen w-screen md:h-auto md:w-auto">
-      <div className="flex justify-center items-center w-auto h-auto">
-        <MapDasherLogo />
+      <div className="flex justify-center items-center h-auto w-screen md:w-auto md:h-auto">
+        <MapDasherLogo gameActive={gameActive} />
       </div>
       <div className="bg-white w-full h-full p-3 md:h-auto md:w-auto md:p-0 md:py-0">
         <p>

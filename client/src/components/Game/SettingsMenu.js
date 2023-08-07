@@ -74,7 +74,7 @@ const SettingsMenu = ({settings, setSettings}) => {
         setSettings={setSettings}
         setting={'timer'}
         value={settings.timer}
-        text={'Round timer in seconds (0 = disabled)'}
+        text={'Round timer in seconds (0 = off)'}
       />
       <SettingsToggle
         setSettings={setSettings}
