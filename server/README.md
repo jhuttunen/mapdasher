@@ -16,6 +16,11 @@
     /api/random/cities/:num/continent/:continentcode
     /api/random/cities/5/continent/EU
 
+### Random capitals from continent
+
+    /api/random/capitals/:num/continent/:continentcode
+    /api/random/capitals/5/continent/EU
+
 #### List of continent codes: 
  
     AF = Africa  
