@@ -10,7 +10,7 @@ const GuessList = ({rounds}) => {
     <>
       {rounds[0] ? (
         <div className="
-          absolute right-0 top-24 max-w-fit max-h-[75vh] overflow-y-auto overflow-x-hidden flex bg-white rounded border border-gray-200 text-sm
+          absolute right-0 top-32 max-w-fit max-h-[75vh] overflow-y-auto overflow-x-hidden flex bg-white rounded border border-gray-200 text-xs
           md:static md:block md:order-last md:max-w-full md-max-h-full md:border-0 md:p-0 md:pt-3 md:text-xs lg:text-sm">
           <button
             onClick={toggleVisibility}
@@ -18,25 +18,24 @@ const GuessList = ({rounds}) => {
           >
             <span>|||</span>
           </button> 
-          <div id="round-history" className={`${isHidden ? 'hidden' : 'block'} md:static md:z-0 md:block p-3`}>
-            <h2 className="text-base">Previous rounds</h2>
+          <div id="round-history" className={`${isHidden ? 'hidden' : 'block'} p-2 md:static md:z-0 md:block md:p-0`}>
             <div className="flex flex-row">
-              <table className="grow bg-slate-50">
-                <thead className="bg-slate-200">
+              <table className="grow bg-gray-50">
+                <thead className="bg-gray-200">
                   <tr className="space-x-2 text-right border border-spacing-1 border-white">
-                    <th className="text-center">Rnd</th>
+                    <th className="text-center">#</th>
                     <th>Score</th>
                     <th>Distance</th>
-                    <th className="text-left pl-5"colSpan={2}>Target location</th>
+                    <th className="text-left pl-5"colSpan={2}>Location</th>
                   </tr>
                 </thead>
-                <tbody className="bg-slate-100 bg-opacity-0 md:bg-opacity-100">
+                <tbody className="bg-gray-100 bg-opacity-0 md:bg-opacity-100">
                   {rounds.slice().reverse().map((round) => (
                     <tr key={round.number} className="space-x-2 text-right border border-spacing-1 border-white">
                       <td className="text-center">{round.number}</td>
                       <td>{round.score}</td>
                       <td>{round.distance} km</td>
-                      <td className="text-left pl-5 truncate">{round.question.city}</td>
+                      <td className="text-left pl-5 truncate">{round.question.city_name}</td>
                       <td>
                         <img 
                           src={`https://flagcdn.com/24x18/${round.question.iso2.toLowerCase()}.png`} 

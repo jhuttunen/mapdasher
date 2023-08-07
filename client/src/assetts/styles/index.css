@@ -16,6 +16,15 @@ code {
     monospace;
 }
 
+@font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://fonts.gstatic.com/l/font?kit=e3t4euO8T-267oIAQAu6jDQyK0nXmIZswKAFNKcu2V9vRSO02AVwAQsEqUK7PQtlKU6jKz3AplrjZh-1HAm32rJX6-_Qu6N_SnhyWXCj-VNrB_ti4ZdY5Xabsb5xdP_XPRg56uLqiySF9drJRnX5NC2oPxN1SUOLrtOQW5dzltm6P7L3w1XJ&skey=24cc298767068e24&v=v15) format('woff2');
+}
+
+h1, .game-over { font-family: 'Press Start 2P', cursive; }
+
 /* leaflet overrides */
 .leaflet-tooltip {
   max-width: 15rem;
@@ -25,7 +34,7 @@ code {
 
 /* tailwindcss */
 .btn {
-  @apply font-bold py-0 px-1 md:py-2 md:px-2 rounded shadow-md;
+  @apply font-bold py-2 px-2 rounded shadow-md;
 }
 .btn-dark {
   @apply bg-gray-500 text-white;

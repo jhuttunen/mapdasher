@@ -1,12 +1,17 @@
 import React from 'react';
 import { Content, Sidebar, Header, Footer } from './';
 
-const Layout =({sidebar, content}) =>{
+const Layout =({sidebar, content, gameActive}) =>{
   return(
     <>
       <main className="flex flex-col h-screen md:flex-row">
-        <Sidebar>
-          <Header title="MapDasher" />
+        <Sidebar 
+          gameActive={gameActive}
+        >
+          <Header 
+            title="MapDasher" 
+          >
+          </Header>
           {sidebar}
         </Sidebar>
         <Content>

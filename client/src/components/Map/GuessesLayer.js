@@ -1,23 +1,29 @@
 import React from 'react';
-import { Marker, Polyline, Tooltip } from 'react-leaflet';
+import { CircleMarker, Marker, Polyline, Tooltip } from 'react-leaflet';
 
-const GuessesLayer = ({rounds}) => {
+const GuessesLayer = ({rounds, gameOver}) => {
   // Last guess only
-  const lastRound = rounds.slice(-1);
+  const guesses = (gameOver) ? rounds : rounds.slice(-1);
   return(
     <>
       {rounds[0] ? ( 
-        lastRound.map((round, index) => (
+        guesses.map((round, index) => (
           <React.Fragment key={index}>
-            <Marker position={[round.question.lat, round.question.lon]}>
+            <CircleMarker
+              center={[round.question.lat, round.question.lng]}
+              pathOptions={{ color: 'green' }}
+              radius={10}>
               <Tooltip className="tooltip" permanent>
                 <span className="inline-flex">
                   <span className="text-left truncate max-w-[13rem]">
-                    {round.question.city},<br /> {round.question.country}
+                    <b>Round {round.number}</b><br />
+                    {round.question.city_name}, {round.question.country}<br />
+                    Score {round.score}<br />
+                    Distance {round.distance} km<br />
                   </span>
                   <img 
                     src={`https://flagcdn.com/24x18/${round.question.iso2.toLowerCase()}.png`} 
-                    className="ml-1 self-center"
+                    className="ml-1 align-top self-start"
                     width="24"
                     height="18"
                     title={round.question.country}
@@ -25,15 +31,13 @@ const GuessesLayer = ({rounds}) => {
                   />
                 </span>
               </Tooltip>
-            </Marker>
-            <Marker position={[round.answer.lat, round.answer.lon]}>
-              <Tooltip permanent>
-                <b>Round {round.number}</b><br />
-                Score {round.score}<br />
-                Distance {round.distance} km
+            </CircleMarker>
+            <Marker position={[round.answer.lat, round.answer.lng]}>
+              <Tooltip>
+                <b>Guess {round.number}</b>
               </Tooltip>
             </Marker>
-            <Polyline positions={[[round.question.lat, round.question.lon], [round.answer.lat, round.answer.lon]]} />
+            <Polyline positions={[[round.question.lat, round.question.lng], [round.answer.lat, round.answer.lng]]} />
           </React.Fragment>
         ))
       ) : null };
