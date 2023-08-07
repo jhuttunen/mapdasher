@@ -6,34 +6,42 @@
 
 MapDasher is a game where you dash around map placing guesses
 
-* frontend with [React](https://react.dev/) and deployed to [GitHub Pages](https://pages.github.com/)
-* responsive layout with [tailwindcss](https://tailwindcss.com/)
-* map features with [react-leaflet](https://react-leaflet.js.org/)
-* backend API with [Express.js](https://expressjs.com/) currently deployed to [Fly.io](https://fly.io/)
-* uses haversine to calculate distances between coordinates
+### Frontend
+* [React](https://react.dev/) frontend deployed to [GitHub Pages](https://pages.github.com/)
+* Responsive layout with [tailwindcss](https://tailwindcss.com/) framework
+* [React-leaflet](https://react-leaflet.js.org/) map features utilized in many ways
+* Game settings currently include
+  * setting number of rounds
+  * customizing asked locations
+  * timer functionality
+  * changing map style
+
+### Backend
+* [Express.js](https://expressjs.com/) backend API deployed to [Fly.io](https://fly.io/)
+* Backend uses [PostreSQL](https://www.postgresql.org/) database deployded to [Fly.io](https://fly.io/)
+* Database connection and model with [Prisma ORM](https://www.prisma.io/) 
+* Basic [API documentation](https://github.com/jhuttunen/mapdasher/tree/main/server) in markdown format
 
 ## Screenshots
 
-### Gameplay
+### Game settings
 
-<img src="images/mapdasher_01_gameplay.png" alt="MapDasher gameplay" width="640" />
+<img src="images/mapdasher_2023-08-07_01_settings.png" alt="MapDasher settings" />
+
+### Game play
+
+<img src="images/mapdasher_2023-08-07_02_gameplay.png" alt="MapDasher gameplay" />
 
 ### Responsive layout
 
-<img src="images/mapdasher_02_responsive.png" alt="MapDasher responsive layout" width="640" />
+<img src="images/mapdasher_2023-08-07_03_responsive.png" alt="MapDasher responsive layout" width="300" />
 
 ## Possible future plans
 
-* settings menu
-  * difficulty
-    * sandbox run or limited number of questions
-    * more location choices (currently only world capitals)
-    * limit questions to single country or continent
-    * show/hide flags
-    * map style with or without place names
-    * timer on/off
+* better scoring formula
+* more different kinds of questions
+* utilizing geoJson data in map
 * user registration
-* database integration (PostreSQL?)
 * save rounds to database
 * allow sharing of round with link
 * top score rankings
@@ -41,4 +49,6 @@ MapDasher is a game where you dash around map placing guesses
 ## Attributions
 
 * Location data modified from World Cities Database (basic) by [SimpleMaps.com](https://simplemaps.com/) licenced under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)
+* [Countries, Languages & Continents data](https://github.com/annexare/Countries) under MIT licence</li>
+* World graphic in logo from [3D world by starline](https://www.freepik.com/free-vector/3d-globe-map-isolated-white-background_37205420.htm)
 * Flag images from [Flagpedia.net](https://flagpedia.net//) are free to use public domain (exempt from copyright)

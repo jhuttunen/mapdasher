@@ -16,7 +16,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage, show
                 : `You were ${distance} km away from`}
             </div>
             <div className="inline-flex justify-center">
-              <span className="text-base lg:text-xl"><b>{city}</b></span>
+              <span className="text-base"><b>{city}</b></span>
               { iso2 && showFlag ?
                 <img 
                   src={`https://flagcdn.com/24x18/${iso2.toLowerCase()}.png`} 
@@ -32,7 +32,7 @@ const Question = ({city, iso2, answered, distance, isLoading, errorMessage, show
     </>
   );
   return(
-    <div id="question" className="flex items-center justify-center order-2 h-16 p-1 col-span-4 md:h-22 md:shadow-md md:rounded">
+    <div id="question" className="flex items-center justify-center order-2 h-16 p-1 col-span-4 md:h-22 md:my-1 md:shadow-md md:rounded">
       <div className="text-center text-sm md:order-2 md:h-22 md:p-3 md:text-base">
         { isLoading ? <LoadingSpinner /> : renderQuestion }
       </div>
