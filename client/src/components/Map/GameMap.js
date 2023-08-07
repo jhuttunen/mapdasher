@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { LayersControl, MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import GuessesLayer  from './GuessesLayer';
 import L from 'leaflet';
@@ -15,15 +15,28 @@ let DefaultIcon = L.icon({
 });
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker, gameOver}) => {
+const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker, gameOver, isMobile}) => {
   const { BaseLayer } = LayersControl;
+
+  // When game over, fitBounds to markers
+  useEffect(() => {
+    if(gameOver && mapRef.current){
+      mapRef.current.flyToBounds(
+        L.latLngBounds(rounds.map((r) => { return [[r.answer.lat, r.answer.lng], [r.question.lat, r.question.lng]]; })),
+        {
+          duration: 0.5, 
+          padding: [((isMobile) ? 50 : 200), ((isMobile) ? 150 : 200)]
+        }
+      );
+    }
+  }, [gameOver, rounds, mapRef]);
 
   return(
     <MapContainer 
       ref={mapRef}
       center={[0,0]} 
       zoom={2.5} 
-      minZoom={2.5}
+      minZoom={1}
       maxZoom={16}
       scrollWheelZoom={true} 
       zoomSnap={0.1}
