@@ -20,7 +20,7 @@ const Map = ({currentRoundAnswered, rounds, mapRef, locationPicker, gameOver, is
 
   // When game over, fitBounds to markers
   useEffect(() => {
-    if(gameOver && mapRef.current){
+    if(gameOver && mapRef.current && rounds.length){
       mapRef.current.flyToBounds(
         L.latLngBounds(rounds.map((r) => { return [[r.answer.lat, r.answer.lng], [r.question.lat, r.question.lng]]; })),
         {
