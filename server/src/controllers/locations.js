@@ -33,7 +33,7 @@ const getRandomCities = async (req, res) => {
   // Create search conditions for the where clauses
   const searchConditions = [];
   if (country) {
-    searchConditions.push(Prisma.sql`country=${country}`)
+    searchConditions.push(Prisma.sql`iso2=${country}`)
   }
   if (continent) {
     searchConditions.push(Prisma.sql`continent=${continent}`)
